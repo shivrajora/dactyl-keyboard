@@ -1909,7 +1909,7 @@ def make_dactyl():
 
         return shape
 
-    def brass_insert_hole(radii=(2.45, 2.45), heights=(3, 1.5), scale_by=1):
+    def brass_insert_hole(radii=(2.4, 2.4), heights=(3, 1.5), scale_by=1):
         if len(radii) != len(heights):
             raise Exception("radii and heights collections must have equal length")
 
@@ -2339,7 +2339,7 @@ def make_dactyl():
 
     def run():
         mod_r, walls_r = model_side(side="right")
-        if resin:
+        if resin and ENGINE == "cadquery":
             mod_r = rotate(mod_r, (333.04, 43.67, 85.00))
         export_file(shape=mod_r, fname=path.join(save_path, r_config_name + r"_right"))
 
@@ -2360,7 +2360,7 @@ def make_dactyl():
         # if symmetry == "asymmetric":
 
         mod_l, walls_l = model_side(side="left")
-        if resin:
+        if resin and ENGINE == "cadquery":
             mod_l = rotate(mod_l, (333.04, 317.33, 286.35))
         export_file(shape=mod_l, fname=path.join(save_path, l_config_name + r"_left"))
 
