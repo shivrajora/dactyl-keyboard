@@ -1337,8 +1337,8 @@ def make_dactyl():
 
         def low_prep_position(sh):
             if side == "right":
-                # return translate(rotate(sh, (0, -41, 10)), (4, -30, -17))
-                return translate(rotate(sh, (-21, -38, 15)), (6, -30, -3))
+                return translate(rotate(sh, (0, -41, 0)), (4, -6, -7))
+
             return translate(rotate(sh, (2, -40, 0)), (2, 0, -15))
 
         def high_prep_position(sh):
