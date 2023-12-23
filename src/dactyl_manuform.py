@@ -1476,7 +1476,7 @@ def make_dactyl():
 
 ########### TRACKBALL GENERATION
     def use_btus(cluster):
-        return trackball_in_wall or (cluster is not None and cluster.has_btus())
+        return (cluster is not None and cluster.has_btus())
 
     def trackball_cutout(segments=100, side="right"):
         shape = cylinder(trackball_hole_diameter / 2, trackball_hole_height)
@@ -1649,8 +1649,6 @@ def make_dactyl():
 
             if oled_horizontal:
                 _left_wall_x_offset = tbiw_left_wall_x_offset_override
-            elif (trackball_in_wall or oled_horizontal) and is_side(side, ball_side):
-                _left_wall_x_offset = tbiw_left_wall_x_offset_override
             else:
                 _left_wall_x_offset = wall_x_offsets[0]
 
@@ -1661,10 +1659,6 @@ def make_dactyl():
             angle_x = np.arctan2(base_pt1[2] - base_pt2[2], base_pt1[1] - base_pt2[1])
             angle_z = np.arctan2(base_pt1[0] - base_pt2[0], base_pt1[1] - base_pt2[1])
             if oled_horizontal:
-                oled_mount_rotation_xyz = (0, rad2deg(angle_x), -100) + np.array(_oled_rotation_offset)
-            elif trackball_in_wall and is_side(side, ball_side):
-                # oled_mount_rotation_xyz = (0, rad2deg(angle_x), -rad2deg(angle_z)-90) + np.array(oled_rotation_offset)
-                # oled_mount_rotation_xyz = (rad2deg(angle_x)*.707, rad2deg(angle_x)*.707, -45) + np.array(oled_rotation_offset)
                 oled_mount_rotation_xyz = (0, rad2deg(angle_x), -100) + np.array(_oled_rotation_offset)
             else:
                 oled_mount_rotation_xyz = (rad2deg(angle_x), 0, -rad2deg(angle_z)) + np.array(_oled_rotation_offset)
