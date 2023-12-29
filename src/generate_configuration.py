@@ -200,6 +200,7 @@ shape_config = {
     # 'HS_NUB' = hot swap underside with nubs.
     # 'HS_UNDERCUT' = hot swap underside with undercut. Does not generate properly.  Hot swap step needs to be modified.
     # 'HS_NOTCH' = hot swap underside with notch.  Does not generate properly.  Hot swap step needs to be modified.
+    # 'CHOC' = Thinner plate, 2.2mm thick, with 1.3mm undercut for choc to clip
     # 'plate_style':  'NUB',
     'plate_style': 'NOTCH',
 
@@ -217,6 +218,7 @@ shape_config = {
     'sa_length': 18.5,
     'sa_double_length': 37.5,
     'plate_thickness':  4+1.1,
+    'top_plate_offset': 0,  # adds a z offset around switch dimensions, used with chocs to keep generally thick top wall
 
     'plate_rim': 1.5 + 0.5,
     # Undercut style dimensions
@@ -379,6 +381,15 @@ shape_config = {
     "trrs_hole_xoffset": -18,  # These are offset from the external mount position
     "trrs_hole_yoffset": -8,
     "trrs_hole_zoffset": -4,
+
+    ##### ENCODER MOUNT POINT
+    "encoder_in_wall": False,
+    "encoder_side": "both",
+    "encoder_keys": None,  # can be array of keys where encoders should sit: {"side": "right", "col": 2, "row": 4}
+
+
+    ##### SPECIAL KEY HANDLING
+    "skip_keys": None,  # can be array of keys holes to fill [{"side": "right", "col": 2, "row": 4}]
 
     ###################################
     ## Bottom Plate Dimensions

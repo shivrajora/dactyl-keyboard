@@ -731,7 +731,14 @@ def make_dactyl():
                 return c
 
 
-    def valid_key(column, row):
+    def skip_key(column, row, side):
+        if skip_keys is not None:
+            for key in skip_keys:
+                if side == key["side"] and column == key["col"] and row == key["row"]:
+                    return True
+        return False
+
+    def valid_key(column, row, side):
         return row <= bottom_key(column)
 
     def x_rot(shape, angle):
@@ -779,15 +786,22 @@ def make_dactyl():
         holes = []
         for column in range(ncols):
             for row in range(nrows):
-                if valid_key(column, row):
-                    holes.append(key_place(single_plate(side=side), column, row))
+                if valid_key(column, row, side=side):
+                    if not skip_key(column, row, side):
+                        holes.append(key_place(single_plate(side=side), column, row))
+                    else:
+                        holes.append(key_place(key_cover(), column, row))
+
+
 
         shape = union(holes)
 
         return shape
 
+    def key_cover():
+        return translate(box(mount_width, mount_height, mount_thickness), (0, 0, mount_thickness / 2))
 
-    def caps():
+    def caps(side="right"):
         caps = None
         for column in range(ncols):
             size = 1
@@ -795,7 +809,7 @@ def make_dactyl():
                 if row >= first_1_5U_row and row <= last_1_5U_row:
                     size = 1.5
             for row in range(nrows):
-                if valid_key(column, row):
+                if valid_key(column, row, side=side):
                     if caps is None:
                         caps = key_place(sa_cap(size), column, row)
                     else:
@@ -1334,10 +1348,12 @@ def make_dactyl():
 
     # todo mounts account for walls or walls account for mounts
     def encoder_wall_mount(shape, side='right'):
-
+        encoder_row = nrows - 2
+        # row_position = key_position([0, 0, 0], -1, encoder_row)
+        # row_position[1] += 10
         def low_prep_position(sh):
             if side == "right":
-                return translate(rotate(sh, (0, -41, 0)), (4, -6, -7))
+                return translate(rotate(sh, (0, -41, 0)), (2, 5, -17))
 
             return translate(rotate(sh, (2, -40, 0)), (2, 0, -15))
 
@@ -1351,10 +1367,10 @@ def make_dactyl():
         # ec11_mount_low = low_prep_position(rotate(import_file(path.join(parts_path, "ec11_mount_2")), (0, 0, 90)))
         ec11_mount_low = low_prep_position(rotate(single_plate(side=side), (0, 0, 90)))
 
-        ec11_mount_low = key_place(ec11_mount_low, -1, 2)
+        ec11_mount_low = key_place(ec11_mount_low, -1, encoder_row)
 
         encoder_cut_high = key_place(high_prep_position(box(12, 13, 20)), -1, 0)
-        encoder_cut_low = key_place(low_prep_position(box(keyswitch_width, keyswitch_height, 20)), -1, 2)
+        encoder_cut_low = key_place(low_prep_position(box(keyswitch_width, keyswitch_height, 20)), -1, encoder_row)
 
         # encoder_cut_high = translate(rotate(encoder_cut_high, rot), [high[0], high[1] + 1, high[2]])
 
