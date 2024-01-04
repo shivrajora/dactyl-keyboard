@@ -655,6 +655,35 @@ def make_dactyl():
         return np.matmul(t_matrix, position)
 
 
+    def arc_length_between_rows(radius=row_radius, angle=alpha):
+        return radius * angle
+
+    def matrix_key_center(row, col, row_radius=row_radius, row_angle=alpha, col_radius=column_radius, col_angle=beta):
+        pos = [0, 0, 0]
+        rot = [0, 0, 0]
+
+        column_angle = beta * (centercol - col)
+
+        column_x_delta_actual = column_x_delta
+        if (pinky_1_5U and column == lastcol):
+            if row >= first_1_5U_row and row <= last_1_5U_row:
+                column_x_delta_actual = column_x_delta - 1.5
+                column_angle = beta * (centercol - column - 0.27)
+
+        column_z_delta = column_radius * (1 - np.cos(column_angle))
+
+        pos = add_translate(pos, [0, 0, -row_radius])
+        rot = rotate_around_x(rot, row_angle * (centerrow - row))
+        shape = add_translate(pos, [0, 0, row_radius])
+        shape = rotate_around_y(rot, column_angle)
+        pos = add_translate(
+            pos, [-(col - centercol) * column_x_delta_actual, 0, column_z_delta]
+        )
+        pos = add_translate(pos, column_offset(col))
+
+        return pos, rot
+
+
     def apply_key_geometry(
             shape,
             translate_fn,
@@ -665,6 +694,8 @@ def make_dactyl():
             column_style=column_style,
     ):
         debugprint('apply_key_geometry()')
+
+        # print("Distance between rows: ", arc_length_between_rows())
 
         column_angle = beta * (centercol - column)
 
