@@ -290,9 +290,9 @@ def make_dactyl():
     except NameError:
         quickly = False
 
-    if oled_mount_type is not None and oled_mount_type != "NONE":
-        for item in oled_configurations[oled_mount_type]:
-            globals()[item] = oled_configurations[oled_mount_type][item]
+    # if oled_mount_type is not None and oled_mount_type != "NONE":
+    #     for item in oled_configurations[oled_mount_type]:
+    #         globals()[item] = oled_configurations[oled_mount_type][item]
 
     if nrows > 5:
         column_style = column_style_gt5
