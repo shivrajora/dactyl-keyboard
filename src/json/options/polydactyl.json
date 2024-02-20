@@ -6,7 +6,7 @@
   "last_1_5U_row": 4,
   "default_1U_cluster": false,
   "full_last_rows": true,
-  "oled_mount_type": "SLIDING",
+  "oled_file": "file:mounts/oled/sliding.json",
   "oled_left_wall_lower_y_offset": 12,
   "wall_z_offset": 8,
   "wall_x_offset": 2,
@@ -27,6 +27,17 @@
     -1,
     -5,
     0
+  ],
+  "tbiw_oled_center_row": 0.75,
+  "tbiw_oled_translation_offset": [
+    -1,
+    -15,
+    -6
+  ],
+  "tbiw_oled_rotation_offset": [
+    -6,
+    0,
+    7
   ],
   "screw_offsets": [
     [

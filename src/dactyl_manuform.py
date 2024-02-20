@@ -485,7 +485,7 @@ def make_dactyl():
             socket = translate(socket, [0, 0, plate_thickness + plate_offset])
             plate = union([plate, socket])
 
-        if plate_style in ['UNDERCUT', 'HS_UNDERCUT', 'NOTCH', 'HS_NOTCH', 'AMOEBA']:
+        if plate_style in ['UNDERCUT', 'HS_UNDERCUT', 'NOTCH', 'HS_NOTCH', 'AMOEBA', 'CHOC']:
             if plate_style in ['UNDERCUT', 'HS_UNDERCUT']:
                 undercut = box(
                     keyswitch_width + 2 * clip_undercut,
@@ -493,7 +493,7 @@ def make_dactyl():
                     mount_thickness
                 )
 
-            if plate_style in ['NOTCH', 'HS_NOTCH', 'AMOEBA']:
+            elif plate_style in ['NOTCH', 'HS_NOTCH', 'AMOEBA']:
                 undercut = box(
                     notch_width,
                     keyswitch_height + 2 * clip_undercut,
@@ -506,8 +506,21 @@ def make_dactyl():
                         mount_thickness
                     )
                 ])
+            elif plate_style == "CHOC":
+                undercut = box(keyswitch_width + 2 * clip_undercut,
+                               keyswitch_height - 2,
+                               mount_thickness / 2
+                )
 
-            undercut = translate(undercut, (0.0, 0.0, -clip_thickness + mount_thickness / 2.0))
+                if top_plate_offset != 0:
+                    plate = difference(plate, [
+                        translate(box(
+                            keyswitch_width + 2,
+                            keyswitch_height + 2,
+                            top_plate_offset
+                    ), (0, 0, mount_thickness - (top_plate_offset / 2) + 0.01))])
+
+            undercut = translate(undercut, (0.0, 0.0, -clip_thickness - top_plate_offset + mount_thickness / 2.0))
 
             if ENGINE == 'cadquery' and undercut_transition > 0:
                 undercut = undercut.faces("+Z").chamfer(undercut_transition, clip_undercut)
@@ -1379,14 +1392,14 @@ def make_dactyl():
 
     # todo mounts account for walls or walls account for mounts
     def encoder_wall_mount(shape, side='right'):
-        encoder_row = nrows - 2
+        encoder_row = encoder_wall_row  #  nrows - 3
         # row_position = key_position([0, 0, 0], -1, encoder_row)
         # row_position[1] += 10
         def low_prep_position(sh):
             if side == "right":
-                return translate(rotate(sh, (0, -41, 0)), (2, 5, -17))
+                return translate(rotate(sh, right_encoder_wall_rotation), right_encoder_wall_offset)
 
-            return translate(rotate(sh, (2, -40, 0)), (2, 0, -15))
+            return translate(rotate(sh, left_encoder_wall_rotation), left_encoder_wall_offset)
 
         def high_prep_position(sh):
             return translate(rotate(sh, (-4, -38, 10)), (6, 0, -15))
@@ -1404,27 +1417,6 @@ def make_dactyl():
         encoder_cut_low = key_place(low_prep_position(box(keyswitch_width, keyswitch_height, 20)), -1, encoder_row)
 
         # encoder_cut_high = translate(rotate(encoder_cut_high, rot), [high[0], high[1] + 1, high[2]])
-
-        # high = key_position([-20, 0, 0], 0, 0)
-        # low = key_position([-20, 0, 0], 0, 2)
-        # pos, rot = oled_position_rotation()
-        # rot = [0, -10, 0]
-        # low_rot = rotate_around_y(low, 20)
-        # hackity hack hack
-        # if side == 'right':
-        #     pos[0] += 5
-        #     pos[1] -= 34
-        #     pos[2] -= 3.5
-        #     rot[0] -= 15
-        #     rot[1] -= 3
-        #     rot[2] += 13
-        # else:
-        #     pos[0] += 1
-        #     pos[1] -= 34
-        #     pos[2] -= 7.5
-        #     rot[0] = 0
-        #     rot[1] -= 3
-        #     # rot[2] = -8
 
         # enconder_spot = key_position([-10, -5, 13.5], 0, cornerrow)
         # ec11_mount_high = import_file(path.join(parts_path, "ec11_mount_2"))
@@ -1523,7 +1515,7 @@ def make_dactyl():
 
 ########### TRACKBALL GENERATION
     def use_btus(cluster):
-        return (cluster is not None and cluster.has_btus())
+        return has_btus or (cluster is not None and cluster.has_btus())
 
     def trackball_cutout(segments=100, side="right"):
         shape = cylinder(trackball_hole_diameter / 2, trackball_hole_height)
@@ -2278,14 +2270,18 @@ def make_dactyl():
             if trackball_in_wall and is_side(side, ball_side):
                 tbprecut, tb, tbcutout, sensor, ball = generate_trackball_in_wall()
 
-                shape = difference(shape, [tbprecut])
-                # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
-                shape = union([shape, tb])
-                # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_2"))
-                shape = difference(shape, [tbcutout])
-                # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_3a"))
-                # export_file(shape=add([shape, sensor]), fname=path.join(save_path, config_name + r"_test_3b"))
-                shape = union([shape, sensor])
+                if use_btus(cluster):
+                    shape = difference(shape, [tbcutout])
+                    shape = union([shape, tb])
+                else:
+                    shape = difference(shape, [tbprecut])
+                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
+                    shape = union([shape, tb])
+                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_2"))
+                    shape = difference(shape, [tbcutout])
+                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_3a"))
+                    # export_file(shape=add([shape, sensor]), fname=path.join(save_path, config_name + r"_test_3b"))
+                    shape = union([shape, sensor])
 
                 if show_caps:
                     shape = add([shape, ball])
