@@ -2270,7 +2270,7 @@ def make_dactyl():
             if trackball_in_wall and is_side(side, ball_side):
                 tbprecut, tb, tbcutout, sensor, ball = generate_trackball_in_wall()
 
-                if use_btus(cluster):
+                if use_btus(cluster()):
                     shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
                 else:
