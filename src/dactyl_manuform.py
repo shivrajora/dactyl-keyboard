@@ -2321,15 +2321,16 @@ def make_dactyl():
         rest = import_file(path.join(parts_path, "dactyl_wrist_rest_v3_" + side))
         rest = rotate(rest, (0, 0, -60))
         rest = translate(rest, (30, -150, 26))
-        rest = union([rest, translate(base, (0, 0, 5)), plate])
+        solid = hull_from_shapes([base])
+        rest = difference(rest, [translate(solid, (0, 0, 5))])
         return rest
 
     # NEEDS TO BE SPECIAL FOR CADQUERY
-    def baseplate(shape, wedge_angle=None, side='right'):
+    def baseplate(walls, wedge_angle=None, side='right'):
         global logo_file
         if ENGINE == 'cadquery':
             # shape = mod_r
-            shape = union([shape, *screw_insert_outers(side=side)])
+            shape = union([walls, *screw_insert_outers(side=side)])
             # tool = translate(screw_insert_screw_holes(side=side), [0, 0, -10])
             if magnet_bottom:
                 tool = screw_insert_all_shapes(screw_hole_diameter / 2., screw_hole_diameter / 2., 2.1, side=side)
@@ -2404,6 +2405,8 @@ def make_dactyl():
 
                 shape = cq.Workplane('XY').add(
                     cq.Solid.extrudeLinear(outer_wire, cutout, cq.Vector(0, 0, base_rim_thickness)))
+                # rest = wrist_rest(walls, shape, side="right")
+                # shape = union([shape, translate(rest, (0, 0, -5))])
                 hole_shapes = []
                 for hole in holes:
                     loc = hole.Center()
@@ -2436,6 +2439,7 @@ def make_dactyl():
                     shape = difference(shape, [controller_shape])
                     shape = union([shape, holder])
 
+                # export_file(shape=rest, fname=path.join(save_path, config_name + r"_right_wrist_rest"))
                 if magnet_bottom:
                     shape = difference(shape, [translate(magnet, (0, 0, 0.05 - (screw_insert_height / 2))) for magnet in list(tool)])
 
@@ -2443,7 +2447,7 @@ def make_dactyl():
         else:
 
             shape = union([
-                case_walls(side=side),
+                walls,
                 *screw_insert_outers(side=side)
             ])
 
@@ -2467,6 +2471,8 @@ def make_dactyl():
             print(">>>>>  RIGHT SIDE ONLY: Only rendering a the right side.")
             return
         base = baseplate(walls_r, side='right')
+        # rest = wrist_rest(mod_r, base, side="right")
+        # base = union([base, rest])
         export_file(shape=base, fname=path.join(save_path, r_config_name + r"_right_plate"))
         if quickly:
             print(">>>>>  QUICK RENDER: Only rendering a the right side and bottom plate.")
