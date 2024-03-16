@@ -213,6 +213,10 @@ def extrude_poly(outer_poly, inner_polys=None, height=1):  # vector=(0,0,1)):
         cq.Solid.extrudeLinear(outerWire=outer_wires, innerWires=inner_wires, vecNormal=cq.Vector(0, 0, height)))
 
 
+def soften(shape, mm=0.5):
+    return shape.edges().fillet(mm)
+
+
 def import_file(fname, convexity=None):
     print("IMPORTING FROM {}".format(fname))
     return cq.Workplane('XY').add(cq.importers.importShape(

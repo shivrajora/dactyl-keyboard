@@ -92,7 +92,9 @@ def make_dactyl():
         return encoder_type(side) != "none"
 
     def get_left_wall_offsets(side="right"):
-        is_track_or_encoder = (trackball_in_wall and is_side(side, ball_side)) or (encoder_in_wall and is_side(side, encoder_side))
+        if side == "left":
+            print("found")
+        is_track_or_encoder = (trackball_in_wall and is_side(side, ball_side)) or encoder_in_wall(side)
         wide = 22 if not is_track_or_encoder else tbiw_left_wall_x_offset_override
         short = 8  # if not is_track_or_encoder else tbiw_left_wall_x_offset_override
         offsets = [
@@ -128,7 +130,7 @@ def make_dactyl():
             offsets[nrows - 2] = wide
             offsets[nrows - 1] = wide
 
-        if (encoder_in_wall and is_side(side, encoder_side)):
+        if (encoder_in_wall(side)):
             # if oled_mount_type == None or not is_side(side, oled_side):
             #     short = 8
             # else:
