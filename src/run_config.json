@@ -44,6 +44,7 @@
   "tbiw_left_wall_z_offset_override": 0.0,
   "tbiw_left_wall_lower_y_offset": 0.0,
   "tbiw_left_wall_lower_z_offset": 0.0,
+  "oled_type": "OLED",
   "tbiw_oled_center_row": 0.75,
   "tbiw_oled_translation_offset": [
     -3.5,
@@ -334,5 +335,6 @@
       0
     ]
   ],
-  "layouts": null
+  "layouts": null,
+  "polydactyl": false
 }
