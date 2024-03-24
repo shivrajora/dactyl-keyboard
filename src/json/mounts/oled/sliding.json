@@ -23,7 +23,7 @@
   "oled_rotation_offset": [
     0,
     -5,
-    0
+    5
   ],
   "oled_left_wall_x_offset_override": 32.0,
   "oled_left_wall_z_offset_override": 0.0,

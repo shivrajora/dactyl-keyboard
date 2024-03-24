@@ -2327,13 +2327,15 @@ def make_dactyl():
                 hole, frame = oled_sliding_mount_frame(side=side)
                 shape = difference(shape, [hole])
                 shape = union([shape, frame])
-                if encoder_in_wall:
-                    shape = encoder_wall_mount(shape, side)
+
 
             elif oled_mount_type == "CLIP":
                 hole, frame = oled_clip_mount_frame(side=side)
                 shape = difference(shape, [hole])
                 shape = union([shape, frame])
+
+        if encoder_in_wall(side):
+            shape = encoder_wall_mount(shape, side)
 
         if not quickly:
             if trackball_in_wall and is_side(side, ball_side):

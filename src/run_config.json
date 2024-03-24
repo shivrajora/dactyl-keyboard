@@ -62,18 +62,18 @@
   "encoder_right": "none",
   "encoder_left": "none",
   "encoder_wall_row": 2,
-  "right_encoder_wall_offset": [
-    2, 0, -17
-  ],
-  "right_encoder_wall_rotation": [
-    0, -41, 0
-  ],
-  "left_encoder_wall_offset": [
-    2, 0, -15
-  ],
-  "left_encoder_wall_rotation": [
-    2, -40, 0
-  ],
+    "right_encoder_wall_offset": [
+        -88, 0, 38
+      ],
+      "right_encoder_wall_rotation": [
+        0, -5, 0
+      ],
+      "left_encoder_wall_offset": [
+        -88, 0, 38
+      ],
+      "left_encoder_wall_rotation": [
+        0, -5, 0
+      ],
   "left_left_wall_x_join_offset": 0.35,
   "left_left_wall_y_join_offset": -6,
   "left_left_wall_z_join_offset": 0.6,
