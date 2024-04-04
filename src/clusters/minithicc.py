@@ -315,8 +315,8 @@ class Minithicc(MinidoxCluster):
                            [
                                left_cluster_key_place(translate(web_post(), wall_locate2(-1, 0)), cornerrow, -1, low_corner=True, side=side),
                                left_cluster_key_place(translate(web_post(), wall_locate3(-1, 0)), cornerrow, -1, low_corner=True, side=side),
-                               self.mr_place(translate(self.thumb_post_tr(), wall_locate2(-0.3, 1))),
-                               self.mr_place(translate(self.thumb_post_tr(), wall_locate3(-0.3, 1))),
+                               self.mr_place(translate(self.thumb_post_tr(), wall_locate2(-1, 0))),
+                               self.mr_place(translate(self.thumb_post_tr(), wall_locate3(-1, 0))),
                                self.tl_place(self.thumb_post_tl()),
                            ]
                        )])
