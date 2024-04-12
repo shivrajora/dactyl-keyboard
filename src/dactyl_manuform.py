@@ -121,52 +121,112 @@ def make_dactyl():
         return name
 
 
+    def is_oled(side):
+        return oled_mount_type not in [None, "None"] and is_side(side, oled_side)
+
     def get_left_wall_offsets(side="right"):
-        is_track_or_encoder = (trackball_in_wall and is_side(side, ball_side)) or encoder_in_wall(side)
-        wide = 22 if not is_track_or_encoder else tbiw_left_wall_x_offset_override
+        wide = 22
         short = 8  # if not is_track_or_encoder else tbiw_left_wall_x_offset_override
         offsets = [
             short, short, short, short, short, short, short, short
         ]
-        # if encoder_in_wall and is_side(side, encoder_side):
-        #     offsets = [
-        #         wide, wide, wide, wide, wide, wide, wide, wide
-        #     ]
+
+        shift_at = 99
+
+        count = 0
+        oled_yes = track_yes = encoder_yes = False
+
+        all_last_row_wide = wide if all_last_rows else short
+
         if oled_mount_type not in [None, "None"] and is_oled(side):
+            oled_yes = True
+        if trackball_is_in_wall(side):
+            track_yes = True
+        if (encoder_in_wall(side)):
+            encoder_yes = True
+
+        if oled_yes and track_yes:
+            wide = tbiw_left_wall_x_offset_override
+            shift_at = 0
+            offsets = [
+                wide, wide, wide, wide, wide, wide, wide, wide
+            ]
+        elif oled_yes and encoder_yes:
             left_wall_x_offset = oled_left_wall_x_offset_override
             wide = oled_left_wall_x_offset_override
-            offsets[0] = wide
-            offsets[1] = wide
-            offsets[2] = wide
-            # if nrows <= 4:
-            #     offsets = [wide, wide, wide, wide]
-            # elif nrows == 5:
-            #     offsets = [wide, wide, wide, short, short]
-            # elif nrows == 6:
-            #     offsets = [wide, wide, wide, short, short, short]
-            # left_wall_x_row_offsets = [22 if row > oled_row else 8 for row in range(lastrow)]
+            shift_at = -4  # shift from wide to short
+            offsets = [
+                wide, wide, wide, wide, short, short, short, short
+            ]
+        elif encoder_yes and track_yes:
+            left_wall_x_offset = tbiw_left_wall_x_offset_override
+            wide = tbiw_left_wall_x_offset_override
+            # short = tbiw_left_wall_x_offset_override  - 5
+            all_last_row_wide = wide if all_last_rows else short
+            if nrows == 3:
+                shift_at = 0
+                offsets = [wide, wide, wide, wide, wide, wide, wide]
+            elif nrows == 4:
+                shift_at = 1 if all_last_rows else 0
+                offsets = [wide, wide, wide, wide, wide, wide, wide]
+            elif nrows == 5:
+                shift_at = 2 if all_last_rows else 1
+                offsets = [all_last_row_wide, wide, wide, wide, wide, wide, wide]
+            elif nrows == 6:
+                shift_at = 3 if all_last_rows else 2
+                offsets = [
+                    short, all_last_row_wide, wide, wide, wide, wide, wide, wide
+                ]
+        elif oled_yes:
+                left_wall_x_offset = oled_left_wall_x_offset_override
+                wide = oled_left_wall_x_offset_override
+                offsets[0] = wide
+                offsets[1] = wide
+                offsets[2] = wide
 
-        # else:
-        if (trackball_in_wall and is_side(side, ball_side)):
+                shift_at = -3
+                # if nrows <= 4:
+                #     offsets = [wide, wide, wide, wide]
+                # elif nrows == 5:
+                #     offsets = [wide, wide, wide, short, short]
+                # elif nrows == 6:
+                #     offsets = [wide, wide, wide, short, short, short]
+                # left_wall_x_row_offsets = [22 if row > oled_row else 8 for row in range(lastrow)]
+
+            # else:
+        elif track_yes:
             # if oled_mount_type == None or not is_side(side, oled_side):
             #     short = 8
             # else:
-            #     left_wall_x_offset = oled_left_wall_x_offset_override
-            #     short = tbiw_left_wall_x_offset_override  - 5# HACKISH
+            left_wall_x_offset = tbiw_left_wall_x_offset_override
+            wide = tbiw_left_wall_x_offset_override
+            short = tbiw_left_wall_x_offset_override  - 5   # HACKI SH
+
+            # if not all_last_rows and nrows >= 5:
+            #     offsets[nrows - 4] = wide
 
             offsets[nrows - 3] = wide
             offsets[nrows - 2] = wide
             offsets[nrows - 1] = wide
-
-        if (encoder_in_wall(side)):
+            shift_at = nrows - 4
+        elif encoder_yes:
+            left_wall_x_offset = oled_left_wall_x_offset_override - 3
+            wide = oled_left_wall_x_offset_override - 3
             # if oled_mount_type == None or not is_side(side, oled_side):
             #     short = 8
             # else:
             #     left_wall_x_offset = oled_left_wall_x_offset_override
             #     short = tbiw_left_wall_x_offset_override  - 5# HACKISH
 
+            offsets[nrows - 1] = wide
             offsets[nrows - 2] = wide
-            offsets[nrows - 3] = wide
+
+            if not all_last_rows:
+                offsets[nrows - 3] = wide
+                shift_at = nrows - 3
+            else:
+                shift_at = nrows - 2
+
             # offsets[nrows - 1] = wide
             # if nrows == 3:
             #     offsets = [short, wide, wide, wide]
@@ -176,19 +236,6 @@ def make_dactyl():
             #     offsets = [short, short, short, wide, wide]
             # elif nrows == 6:
             #     offsets = [short, short, wide, wide, wide, wide]
-        if oled_mount_type not in [None, "None"] and is_oled(side):
-            left_wall_x_offset = oled_left_wall_x_offset_override
-            wide = oled_left_wall_x_offset_override
-            offsets[0] = wide
-            offsets[1] = wide
-            offsets[2] = wide
-            # if nrows <= 4:
-            #     offsets = [wide, wide, wide, wide]
-            # elif nrows == 5:
-            #     offsets = [wide, wide, wide, short, short]
-            # elif nrows == 6:
-            #     offsets = [wide, wide, wide, short, short, short]
-            # left_wall_x_row_offsets = [22 if row > oled_row else 8 for row in range(lastrow)]
 
         return offsets
 
@@ -1061,7 +1108,7 @@ def make_dactyl():
             key_position([-mount_width * 0.5, direction * mount_height * 0.5, 0], 0, row)
         )
 
-        wall_x_offsets = get_left_wall_offsets(side)
+        wall_x_offsets  = get_left_wall_offsets(side)
 
         if trackball_in_wall and is_side(side, ball_side):
 
@@ -1434,7 +1481,9 @@ def make_dactyl():
         # row_position = key_position([0, 0, 0], -1, encoder_row)
         # row_position[1] += 10
         def low_prep_position(sh):
-            if side == "right":
+            if trackball_is_in_wall(side):
+                return translate(rotate(sh, tbiw_encoder_wall_rotation), tbiw_encoder_wall_offset)
+            elif side == "right":
                 return translate(rotate(sh, right_encoder_wall_rotation), right_encoder_wall_offset)
 
             return translate(rotate(sh, left_encoder_wall_rotation), left_encoder_wall_offset)
@@ -1725,6 +1774,8 @@ def make_dactyl():
 
         return tbiw_mount_location_xyz, tbiw_mount_rotation_xyz
 
+    def trackball_is_in_wall(side="right"):
+        return trackball_in_wall and is_side(side, ball_side) and not cluster(side).is_tb
 
     def generate_trackball_in_wall():
         pos, rot = tbiw_position_rotation()
@@ -1734,7 +1785,7 @@ def make_dactyl():
     def oled_position_rotation(side='right'):
         wall_x_offsets = get_left_wall_offsets(side)
         _oled_center_row = None
-        if trackball_in_wall and is_side(side, ball_side):
+        if trackball_is_in_wall(side):
             _oled_center_row = tbiw_oled_center_row
             _oled_translation_offset = tbiw_oled_translation_offset
             _oled_rotation_offset = tbiw_oled_rotation_offset
@@ -1756,6 +1807,8 @@ def make_dactyl():
             )
 
             if oled_horizontal:
+                _left_wall_x_offset = tbiw_left_wall_x_offset_override
+            elif trackball_is_in_wall(side):
                 _left_wall_x_offset = tbiw_left_wall_x_offset_override
             else:
                 _left_wall_x_offset = wall_x_offsets[0]
@@ -2342,7 +2395,7 @@ def make_dactyl():
             shape = encoder_wall_mount(shape, side)
 
         if not quickly:
-            if trackball_in_wall and is_side(side, ball_side):
+            if trackball_is_in_wall(side):
                 tbprecut, tb, tbcutout, sensor, ball = generate_trackball_in_wall()
 
                 if use_btus(cluster()):
