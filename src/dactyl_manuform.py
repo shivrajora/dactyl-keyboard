@@ -570,6 +570,9 @@ def make_dactyl():
             socket = translate(socket, [0, 0, plate_thickness + plate_offset])
             plate = union([plate, socket])
 
+        if is_cq():
+            plate = plate.edges("<Z").chamfer(plate_chamfer)
+
         if plate_style in ['UNDERCUT', 'HS_UNDERCUT', 'NOTCH', 'HS_NOTCH', 'AMOEBA', 'CHOC']:
             if plate_style in ['UNDERCUT', 'HS_UNDERCUT']:
                 undercut = box(
