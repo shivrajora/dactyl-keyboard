@@ -28,6 +28,7 @@
   "thumb_style": "TRACKBALL_WILD",
   "right_side_only": false,
   "default_1U_cluster": true,
+  "oled_left_wall_x_offset_override": 32.0,
   "trackball_in_wall": false,
   "tbiw_ball_center_row": 0.2,
   "tbiw_translational_offset": [
@@ -69,7 +70,7 @@
       0, -5, 0
     ],
     "left_encoder_wall_offset": [
-      -88, 0, 38
+      -85, -3, 42
     ],
     "left_encoder_wall_rotation": [
       0, -5, 0
