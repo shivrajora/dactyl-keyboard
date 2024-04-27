@@ -17,6 +17,7 @@ from clusters.minidox import MinidoxCluster
 from clusters.minithicc import Minithicc
 from clusters.minithicc3 import Minithicc3
 from clusters.trackball_orbyl import TrackballOrbyl
+from clusters.trackball_orbyl5 import TrackballOrbyl5
 from clusters.trackball_wilder import TrackballWild
 from clusters.trackball_three import TrackballThree
 from clusters.trackball_cj import TrackballCJ
@@ -2677,6 +2678,8 @@ def make_dactyl():
             clust = Minithicc3(all_merged)
         elif style == TrackballOrbyl.name():
             clust = TrackballOrbyl(all_merged)
+        elif style == TrackballOrbyl5.name():
+            clust = TrackballOrbyl5(all_merged)
         elif style == TrackballWild.name():
             clust = TrackballWild(all_merged)
         elif style == TrackballThree.name():

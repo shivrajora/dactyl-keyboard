@@ -3,7 +3,7 @@ import json
 import os
 
 
-class TrackballOrbyl(DefaultCluster):
+class TrackballOrbyl5(DefaultCluster):
     key_diameter = 75
     translation_offset = [
         0,
@@ -82,7 +82,7 @@ class TrackballOrbyl(DefaultCluster):
 
     @staticmethod
     def name():
-        return "TRACKBALL_ORBYL"
+        return "TRACKBALL_ORBYL5"
 
     def get_config(self):
         with open(os.path.join("src", "clusters", "json", "TRACKBALL_ORBYL.json"), mode='r') as fid:
@@ -446,11 +446,11 @@ class TrackballOrbyl(DefaultCluster):
                     cluster_key_place(web_post_bl(), 2, lastrow),
                     self.tl_place(web_post_tr()),
                     cluster_key_place(web_post_bl(), 2, lastrow),
-                    self.mr_place(web_post_tl()),
+                    self.tr_place(web_post_tl()),
                     cluster_key_place(web_post_br(), 2, lastrow),
                     cluster_key_place(web_post_bl(), 3, lastrow),
-                    self.mr_place(web_post_tr()),
-                    self.mr_place(web_post_tl()),
+                    self.tr_place(web_post_tr()),
+                    self.tr_place(web_post_tl()),
                     cluster_key_place(web_post_br(), 2, lastrow),
 
                     cluster_key_place(web_post_bl(), 3, lastrow),
