@@ -19,11 +19,11 @@
     15,
     -25
   ],
-  "tbiw_left_wall_x_offset_override": 36.0,
+  "tbiw_left_wall_x_offset_override": 30.0,
   "tbiw_left_wall_z_offset_override": 6.0,
   "tbiw_left_wall_lower_y_offset": -12.0,
   "tbiw_left_wall_lower_z_offset": 14.0,
-  "oled_left_wall_x_offset_override": 36.0,
+  "oled_left_wall_x_offset_override": 30.0,
   "oled_left_wall_z_offset_override": 6.0,
   "oled_left_wall_lower_y_offset": -12.0,
   "oled_left_wall_lower_z_offset": 14.0,

@@ -321,7 +321,7 @@ class Minithicc3(MinidoxCluster):
 
     def screw_positions(self):
         position = self.thumborigin()
-        position = list(np.array(position) + np.array([-37, -37, -16]))
+        position = list(np.array(position) + np.array([-37, -34, -16]))
         position[1] = position[1] - .4 * (self.minidox_Usize - 1.7) * sa_length
         position[2] = 0
 
