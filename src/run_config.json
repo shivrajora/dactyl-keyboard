@@ -180,6 +180,8 @@
   "nub_keyswitch_width": 14.4,
   "undercut_keyswitch_height": 14.0,
   "undercut_keyswitch_width": 14.0,
+  "choc_keyswitch_height": 13.9,
+  "choc_keyswitch_width": 13.9,
   "plate_chamfer": 0.6,
   "notch_width": 5.0,
   "sa_profile_key_height": 12.7,
@@ -345,5 +347,6 @@
     ]
   ],
   "layouts": null,
-  "polydactyl": false
+  "polydactyl": false,
+  "render_png": false
 }
