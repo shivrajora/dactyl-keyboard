@@ -398,9 +398,9 @@ class CarbonfetCluster(DefaultCluster):
 
         return shape
 
-    def screw_positions(self):
-        position = self.thumborigin()
-        position = list(np.array(position) + np.array([-29, -59, 0]))
-        position[2] = 0
-
-        return position
+    # def screw_positions(self):
+    #     position = self.thumborigin()
+    #     position = list(np.array(position) + np.array([-29, -59, 0]))
+    #     position[2] = 0
+    #
+    #     return position
