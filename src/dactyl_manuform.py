@@ -827,6 +827,10 @@ def make_dactyl():
                 column_x_delta_actual = column_x_delta - 1.5
                 column_angle = beta * (centercol - column - 0.27)
 
+        # if row == 0:      ## POLYDACTYL OLD INCLINED TOP ROW
+        #     shape = translate_fn(shape, [0, 5, 2.1])
+        #     shape = rotate_x_fn(shape, 0.25)
+
         if column_style == "orthographic":
             column_z_delta = column_radius * (1 - np.cos(column_angle))
             shape = translate_fn(shape, [0, 0, -row_radius])
