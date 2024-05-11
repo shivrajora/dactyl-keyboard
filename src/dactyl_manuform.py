@@ -17,12 +17,15 @@ from clusters.minidox import MinidoxCluster
 from clusters.minithicc import Minithicc
 from clusters.minithicc3 import Minithicc3
 from clusters.trackball_orbyl import TrackballOrbyl
+from clusters.trackball_two import TrackballTwo
 from clusters.trackball_orbyl5 import TrackballOrbyl5
 from clusters.trackball_wilder import TrackballWild
 from clusters.trackball_three import TrackballThree
 from clusters.trackball_cj import TrackballCJ
 from clusters.custom_cluster import CustomCluster
 from clusters.trackball_btu import TrackballBTU
+from clusters.trackball_one import TrackballOne
+
 from json_loader import load_json
 
 from os import path
@@ -1736,6 +1739,9 @@ def make_dactyl():
         if btus:
             tb_file = path.join(parts_path, r"phat_btu_socket")
             tbcut_file = path.join(parts_path, r"phatter_btu_socket_cutter")
+        elif ceramic:
+            tb_file = path.join(parts_path, r"socket_ceramic_spheres")
+            tbcut_file = path.join(parts_path, r"socket_ceramic_cutout")
         else:
             tb_file = path.join(parts_path, r"trackball_socket_body_34mm")
             tbcut_file = path.join(parts_path, r"trackball_socket_cutter_34mm")
@@ -2505,13 +2511,12 @@ def make_dactyl():
                 if cluster(side).has_btus():
                     shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
-                else:
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
-                    shape = union([shape, tb])
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_2"))
+                elif ceramic:
                     shape = difference(shape, [tbcutout])
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_3a"))
-                    # export_file(shape=add([shape, sensor]), fname=path.join(save_path, config_name + r"_test_3b"))
+                    shape = union([shape, tb])
+                else:
+                    shape = union([shape, tb])
+                    shape = difference(shape, [tbcutout])
                     shape = union([shape, sensor])
 
                 if show_caps:
@@ -2592,22 +2597,22 @@ def make_dactyl():
                 inner_shape = translate(inner_shape, (0, 0, -base_rim_thickness))
                 if block_bottoms:
                     inner_shape = blockerize(inner_shape)
-                if logo_file not in ["", None]:
-                    logo_offset = [
-                        -10,
-                        -10,
-                        -0.5
-                    ]
-                    logo = import_file(logo_file)
-                    if side == "left":
-                        logo = mirror(logo, "YZ")
-                    if ncols <= 6:
-                        logo_offset[0] -= 12 * (7 - ncols)
-                    if nrows <= 5:
-                        logo_offset[1] += 15 * (6 - ncols)
-                    logo = translate(logo, logo_offset)
-
-                    inner_shape = union([inner_shape, logo])
+                # if logo_file not in ["", None]:
+                #     logo_offset = [
+                #         -10,
+                #         -10,
+                #         -0.5
+                #     ]
+                #     logo = import_file(logo_file)
+                #     if side == "left":
+                #         logo = mirror(logo, "YZ")
+                #     if ncols <= 6:
+                #         logo_offset[0] -= 12 * (7 - ncols)
+                #     if nrows <= 5:
+                #         logo_offset[1] += 15 * (6 - ncols)
+                #     logo = translate(logo, logo_offset)
+                #
+                #     inner_shape = union([inner_shape, logo])
 
                 holes = []
                 for i in range(len(base_wires)):
@@ -2632,6 +2637,33 @@ def make_dactyl():
                 shape = difference(shape, hole_shapes)
                 shape = translate(shape, (0, 0, -base_rim_thickness))
                 shape = union([shape, inner_shape])
+
+                if has_puck:
+                    height = 6.0
+                    mount = (
+                        wp()
+                        .circle(20)
+                        .workplane(offset=height)
+                        .circle(12)
+                        .loft(combine=True)
+                    )
+
+                    screw = cq.importers.importStep(
+                        os.path.abspath(os.path.join(r"src", "parts", "quarter_inch_screw.step"))).translate([0, 0, -9])
+
+                    mid_row = int(np.floor(nrows / 2))
+
+                    pos = key_position([0, 0, 0], 0, mid_row)
+                    pos[2] = -base_rim_thickness
+                    pos[0] += (ncols * 6)
+                    mount = translate(mount, pos)
+                    screw = translate(screw, pos)
+                    cut = translate(cylinder(10, 5), pos)
+
+                    shape = difference(shape, [cut])
+                    shape = union([shape, mount])
+                    shape = difference(shape, [screw])
+
                 if controller_mount_type == "EXTERNAL_BREAKOUT":
                     controller_shape = translate(box(36.5, 57.5, 5),
                                                  (
@@ -2764,6 +2796,10 @@ def make_dactyl():
             clust = TrackballWild(all_merged)
         elif style == TrackballThree.name():
             clust = TrackballThree(all_merged)
+        elif style == TrackballOne.name():
+            clust = TrackballOne(all_merged)
+        elif style == TrackballTwo.name():
+            clust = TrackballTwo(all_merged)
         elif style == TrackballBTU.name():
             clust = TrackballBTU(all_merged)
         elif style == TrackballCJ.name():

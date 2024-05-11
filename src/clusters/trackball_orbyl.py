@@ -35,9 +35,29 @@ class TrackballOrbyl(DefaultCluster):
             0.0,
             0.0,
             -8.0
+        ],
+        [
+            0.0,
+            0.0,
+            -8.0
+        ],
+        [
+            0.0,
+            0.0,
+            -8.0
         ]
     ]
     key_rotation_offsets = [
+        [
+            0.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0
+        ],
         [
             0.0,
             0.0,
@@ -83,30 +103,50 @@ class TrackballOrbyl(DefaultCluster):
         return superdata
 
     def __init__(self, parent_locals):
-        self.num_keys = 4
+        self.num_keys = 6
         self.is_tb = True
         super().__init__(parent_locals)
         for item in parent_locals:
             globals()[item] = parent_locals[item]
 
-    def position_rotation(self):
-        rot = [10, -15, 5]
+        self.base_rot = [10 + self.rotation_offset[0], -15 + self.rotation_offset[1], 5 + self.rotation_offset[2]]
         pos = self.thumborigin()
         # Changes size based on key diameter around ball, shifting off of the top left cluster key.
-        shift = [-.9 * self.key_diameter/2 + 27 - 42, -.1 * self.key_diameter / 2 + 3 - 20, -5]
+        shift = [-.9 * self.key_diameter / 2 + 27 - 42, -.1 * self.key_diameter / 2 + 3 - 20, -5]
         for i in range(len(pos)):
             pos[i] = pos[i] + shift[i] + self.translation_offset[i]
 
-        for i in range(len(rot)):
-            rot[i] = rot[i] + self.rotation_offset[i]
+        self.base_pos = pos
 
-        return pos, rot
+    def track_rotation(self, rot):
+        return [rot[i] + self.base_rot[i] for i in range(len(rot))]
+
+    def position_rotation(self):
+        return self.base_pos.copy(), self.base_rot.copy()
+
+        # rot = [10, -15, 5]
+        # pos = self.thumborigin()
+        # # Changes size based on key diameter around ball, shifting off of the top left cluster key.
+        # shift = [-.9 * self.key_diameter/2 + 27 - 42, -.1 * self.key_diameter / 2 + 3 - 20, -5]
+        # for i in range(len(pos)):
+        #     pos[i] = pos[i] + shift[i] + self.translation_offset[i]
+        #
+        # for i in range(len(rot)):
+        #     rot[i] = rot[i] + self.rotation_offset[i]
+        #
+        # return pos, self.base_rot.copy()
 
     def track_place(self, shape):
         pos, rot = self.position_rotation()
         shape = rotate(shape, rot)
         shape = translate(shape, pos)
         return shape
+
+    def track_position(self, pos):
+        origin, rot = self.position_rotation()
+        pos = rotate_point(pos, rot)
+        pos = [pos[i] + origin[i] for i in range(len(pos))]
+        return pos
 
     def tl_place(self, shape):
         shape = rotate(shape, [0, 0, 0])
@@ -118,22 +158,42 @@ class TrackballOrbyl(DefaultCluster):
 
         return shape
 
-    def mr_place(self, shape):
+    def tr_place(self, shape):
         shape = rotate(shape, [0, 0, 0])
-        shape = rotate(shape, self.key_rotation_offsets[1])
         t_off = self.key_translation_offsets[1]
-        shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0,0,-130])
+        shape = rotate(shape, self.key_rotation_offsets[1])
+        shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter / 2, t_off[2]))
+        shape = rotate(shape, [0,0,-120])
         shape = self.track_place(shape)
 
         return shape
 
-    def br_place(self, shape):
-        shape = rotate(shape, [0, 0, 180])
+    def mr_place(self, shape):
+        shape = rotate(shape, [0, 0, 0])
         shape = rotate(shape, self.key_rotation_offsets[2])
         t_off = self.key_translation_offsets[2]
+        shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter/2, t_off[2]))
+        shape = rotate(shape, [0,0,-160])
+        shape = self.track_place(shape)
+
+        return shape
+
+    # def m2_place(self, shape):
+    #     shape = rotate(shape, [0, 0, 0])
+    #     shape = rotate(shape, self.key_rotation_offsets[3])
+    #     t_off = self.key_translation_offsets[3]
+    #     shape = translate(shape, (t_off[0], t_off[1] + self.key_diameter/2, t_off[2]))
+    #     shape = rotate(shape, [0,0,-170])
+    #     shape = self.track_place(shape)
+    #
+    #     return shape
+
+    def br_place(self, shape):
+        shape = rotate(shape, [0, 0, 180])
+        shape = rotate(shape, self.key_rotation_offsets[4])
+        t_off = self.key_translation_offsets[4]
         shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0,0,-180])
+        shape = rotate(shape, [0,0,-200])
         shape = self.track_place(shape)
 
         return shape
@@ -141,10 +201,10 @@ class TrackballOrbyl(DefaultCluster):
     def bl_place(self, shape):
         debugprint('thumb_bl_place()')
         shape = rotate(shape, [0, 0, 180])
-        shape = rotate(shape, self.key_rotation_offsets[3])
-        t_off = self.key_translation_offsets[3]
+        shape = rotate(shape, self.key_rotation_offsets[5])
+        t_off = self.key_translation_offsets[5]
         shape = translate(shape, (t_off[0], t_off[1]+self.key_diameter/2, t_off[2]))
-        shape = rotate(shape, [0,0,-230])
+        shape = rotate(shape, [0,0,-240])
         shape = self.track_place(shape)
 
         return shape
@@ -153,9 +213,11 @@ class TrackballOrbyl(DefaultCluster):
         debugprint('thumb_1x_layout()')
         return union([
             self.tl_place(rotate(shape, [0, 0, self.thumb_plate_tr_rotation])),
-            self.mr_place(rotate(shape, [0, 0, self.thumb_plate_mr_rotation])),
-            self.bl_place(rotate(shape, [0, 0, self.thumb_plate_bl_rotation])),
-            self.br_place(rotate(shape, [0, 0, self.thumb_plate_br_rotation])),
+            # self.tr_place(rotate(shape, [0, 0, self.thumb_plate_tl_rotation])),
+            # self.mr_place(rotate(shape, [0, 0, self.thumb_plate_mr_rotation])),
+            # # self.m2_place(rotate(shape, [0, 0, self.thumb_plate_ml_rotation])),
+            # self.bl_place(rotate(shape, [0, 0, self.thumb_plate_bl_rotation])),
+            # self.br_place(rotate(shape, [0, 0, self.thumb_plate_br_rotation])),
         ])
 
     def thumb_fx_layout(self, shape):
@@ -242,6 +304,10 @@ class TrackballOrbyl(DefaultCluster):
                     self.mr_place(web_post_br()),
                     self.track_place(self.tb_post_r()),
                     self.mr_place(web_post_bl()),
+                    self.tr_place(web_post_br()),
+                    self.track_place(self.tb_post_r()),
+                    self.tr_place(web_post_bl()),
+                    self.track_place(self.tb_post_tr()),
                     self.tl_place(web_post_br()),
                     self.track_place(self.tb_post_r()),
                     self.tl_place(web_post_bl()),
@@ -280,8 +346,19 @@ class TrackballOrbyl(DefaultCluster):
             triangle_hulls(
                 [
                     self.mr_place(web_post_bl()),
-                    self.tl_place(web_post_br()),
+                    self.tr_place(web_post_br()),
                     self.mr_place(web_post_tl()),
+                    self.tr_place(web_post_tr()),
+                ]
+            )
+        )
+
+        hulls.append(
+            triangle_hulls(
+                [
+                    self.tr_place(web_post_bl()),
+                    self.tl_place(web_post_br()),
+                    self.tr_place(web_post_tl()),
                     self.tl_place(web_post_tr()),
                 ]
             )
@@ -317,9 +394,13 @@ class TrackballOrbyl(DefaultCluster):
         print('thumb_walls()')
         # thumb, walls
         shape = wall_brace(
-            self.mr_place, .5, 1, web_post_tr(),
+            self.tr_place, .5, 1, web_post_tr(),
             (lambda sh: cluster_key_place(sh, 3, lastrow)), 0, -1, web_post_bl(),
         )
+        shape = union([shape, wall_brace(
+            self.tr_place, .5, 1, web_post_tr(),
+            self.mr_place, .5, 1, web_post_tr(),
+        )])
         shape = union([shape, wall_brace(
             self.mr_place, .5, 1, web_post_tr(),
             self.br_place, 0, -1, web_post_br(),
