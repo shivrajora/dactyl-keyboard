@@ -2,12 +2,12 @@
   "tb_socket_translation_offset": [
     0,
     0,
-    8
+    0
   ],
   "tb_socket_rotation_offset": [
     0,
-    1,
-    30
+    0,
+    -40
   ],
   "tbiw_translational_offset": [
     -6,
@@ -33,7 +33,7 @@
   "encoder_left_wall_x_offset_override": 25,
   "encoder_wall_row": 2,
   "right_encoder_wall_offset": [
-    -86, -2, 43
+    -86, -2, 40
   ],
   "right_encoder_wall_rotation": [
     -2, -3, 0
