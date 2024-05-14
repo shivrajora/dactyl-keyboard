@@ -2534,12 +2534,12 @@ def make_dactyl():
 
         return shape, walls_shape
 
-    def wrist_rest(base, plate, side="right"):
+    def wrist_rest(top, plate, side="right"):
         rest = import_file(path.join(parts_path, "dactyl_wrist_rest_v3_" + side))
         rest = rotate(rest, (0, 0, -60))
         rest = translate(rest, (30, -150, 26))
-        solid = hull_from_shapes([base])
-        rest = difference(rest, [translate(solid, (0, 0, 5))])
+        solid = hull_from_shapes([plate, translate(top, (0, 0, 4.9))])
+        rest = difference(rest, [solid])
         return rest
 
     # NEEDS TO BE SPECIAL FOR CADQUERY
@@ -2622,8 +2622,8 @@ def make_dactyl():
 
                 shape = cq.Workplane('XY').add(
                     cq.Solid.extrudeLinear(outer_wire, cutout, cq.Vector(0, 0, base_rim_thickness)))
-                # rest = wrist_rest(walls, shape, side="right")
-                # shape = union([shape, translate(rest, (0, 0, -5))])
+
+                # shape = union([shape, rest])
                 hole_shapes = []
                 for hole in holes:
                     loc = hole.Center()
@@ -2709,6 +2709,9 @@ def make_dactyl():
         right_name = get_descriptor_name_side(side="right")
         left_name = get_descriptor_name_side(side="left")
         mod_r, walls_r = model_side(side="right")
+        base = baseplate(walls_r, side='right')
+        rest_r = wrist_rest(mod_r, base, side="right")
+
         if resin and ENGINE == "cadquery":
             mod_r = rotate(mod_r, (333.04, 43.67, 85.00))
         export_file(shape=mod_r, fname=path.join(save_path, right_name + r"_TOP"))
@@ -2717,15 +2720,15 @@ def make_dactyl():
         # print(f"Left descriptor name: {get_descriptor_name_side(side='left')}")
         if right_side_only:
             print(">>>>>  RIGHT SIDE ONLY: Only rendering a the right side.")
-            return
-        base = baseplate(walls_r, side='right')
-        # rest = wrist_rest(mod_r, base, side="right")
+            retur
+
         # base = union([base, rest])
         export_file(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
+        export_file(shape=rest_r, fname=path.join(save_path, left_name + r"_WRIST_REST"))
         if quickly:
             print(">>>>>  QUICK RENDER: Only rendering a the right side and bottom plate.")
             return
-        export_dxf(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
+        # export_dxf(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
 
         # rest = wrist_rest(mod_r, base, side="right")
         #
@@ -2734,14 +2737,17 @@ def make_dactyl():
         # if symmetry == "asymmetric":
 
         mod_l, walls_l = model_side(side="left")
-        if resin and ENGINE == "cadquery":
-            mod_l = rotate(mod_l, (333.04, 317.33, 286.35))
+
         export_file(shape=mod_l, fname=path.join(save_path, left_name + r"_TOP"))
 
         base_l = mirror(baseplate(walls_l, side='left'), 'YZ')
-        export_file(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
-        export_dxf(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
+        rest_l = wrist_rest(mod_l, base_l, side="left")
+        if resin and ENGINE == "cadquery":
+            mod_l = rotate(mod_l, (333.04, 317.33, 286.35))
 
+        export_file(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
+        # export_dxf(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
+        export_file(shape=rest_l, fname=path.join(save_path, left_name + r"_WRIST_REST"))
         # else:
         #     export_file(shape=mirror(mod_r, 'YZ'), fname=path.join(save_path, config_name + r"_left"))
         #
