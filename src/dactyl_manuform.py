@@ -2535,11 +2535,12 @@ def make_dactyl():
         return shape, walls_shape
 
     def wrist_rest(top, plate, side="right"):
-        rest = import_file(path.join(parts_path, "dactyl_wrist_rest_v3_" + side))
+        rest = import_file(path.join(parts_path, "dactyl_wrist_rest_v3_right"))
         rest = rotate(rest, (0, 0, -60))
-        rest = translate(rest, (30, -150, 26))
-        solid = hull_from_shapes([plate, translate(top, (0, 0, 4.9))])
-        rest = difference(rest, [solid])
+        rest = translate(rest, (30, -160, 26))
+        # solid = union([plate, translate(top, (0, 0, 5))])
+        rest = difference(rest, [translate(top, (0, 0, -0.5))])
+        # rest = union([rest, plate])
         return rest
 
     # NEEDS TO BE SPECIAL FOR CADQUERY
@@ -2720,11 +2721,11 @@ def make_dactyl():
         # print(f"Left descriptor name: {get_descriptor_name_side(side='left')}")
         if right_side_only:
             print(">>>>>  RIGHT SIDE ONLY: Only rendering a the right side.")
-            retur
+            return
 
         # base = union([base, rest])
         export_file(shape=base, fname=path.join(save_path, right_name + r"_PLATE"))
-        export_file(shape=rest_r, fname=path.join(save_path, left_name + r"_WRIST_REST"))
+        export_file(shape=rest_r, fname=path.join(save_path, right_name + r"_WRIST_REST"))
         if quickly:
             print(">>>>>  QUICK RENDER: Only rendering a the right side and bottom plate.")
             return
@@ -2740,8 +2741,10 @@ def make_dactyl():
 
         export_file(shape=mod_l, fname=path.join(save_path, left_name + r"_TOP"))
 
-        base_l = mirror(baseplate(walls_l, side='left'), 'YZ')
-        rest_l = wrist_rest(mod_l, base_l, side="left")
+        base_l = baseplate(walls_l, side='left')
+        rest_l = mirror(wrist_rest(mod_l, base_l, side="left"), 'YZ')
+        base_l = mirror(base_l, "YZ")
+
         if resin and ENGINE == "cadquery":
             mod_l = rotate(mod_l, (333.04, 317.33, 286.35))
 

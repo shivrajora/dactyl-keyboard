@@ -1,0 +1,7 @@
+{
+  "resin": true,
+  "wall_thickness": 25.0,
+  "wall_base_y_thickness": 25.0,
+  "wall_base_x_thickness": 25.0,
+  "wall_base_back_thickness": 24.75
+}

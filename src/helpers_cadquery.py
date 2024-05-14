@@ -84,6 +84,9 @@ def intersect(shape1, shape2):
     return shape1.intersect(shape2)
 
 
+def solidify(shape):
+    return cq.Solid.makeSolid(shape)
+
 def face_from_points(points):
     # debugprint('face_from_points()')
     edges = []
