@@ -33,16 +33,16 @@
   "encoder_left_wall_x_offset_override": 25,
   "encoder_wall_row": 2,
   "right_encoder_wall_offset": [
-    -86, -2, 40
+    -85, -2, 43
   ],
   "right_encoder_wall_rotation": [
-    -2, -3, 0
+    -2, -5, 0
   ],
   "left_encoder_wall_offset": [
-    -86, -2, 40
+    -85, -2, 43
   ],
   "left_encoder_wall_rotation": [
-    -2, -3, 0
+    -2, -5, 0
   ],
   "tbiw_encoder_wall_offset": [
     -85, -4, 41
