@@ -2739,14 +2739,16 @@ def make_dactyl():
 
         mod_l, walls_l = model_side(side="left")
 
+        if resin and ENGINE == "cadquery":
+            mod_l = rotate(mod_l, (333.04, 317.33, 286.35))
+
         export_file(shape=mod_l, fname=path.join(save_path, left_name + r"_TOP"))
 
         base_l = baseplate(walls_l, side='left')
         rest_l = mirror(wrist_rest(mod_l, base_l, side="left"), 'YZ')
         base_l = mirror(base_l, "YZ")
 
-        if resin and ENGINE == "cadquery":
-            mod_l = rotate(mod_l, (333.04, 317.33, 286.35))
+
 
         export_file(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
         # export_dxf(shape=base_l, fname=path.join(save_path, left_name + r"_PLATE"))
