@@ -8,6 +8,7 @@
   "logo_file": null,
   "show_caps": false,
   "show_pcbs": false,
+  "color": "yellow",
   "resin": false,
   "nrows": 6,
   "ncols": 6,
