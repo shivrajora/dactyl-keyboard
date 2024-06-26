@@ -42,6 +42,7 @@
   ],
   "oled_center_row": 1.25,
   "tbiw_oled_center_row": 1.25,
+  "trackball_in_wall": false,
   "tbiw_ball_center_row": 0.2,
   "tbiw_oled_translation_offset": [
     -1,
