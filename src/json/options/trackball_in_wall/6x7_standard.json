@@ -72,12 +72,12 @@
   ],
   "oled_translation_offset": [
     0,
-    2,
-    1
+    -2,
+    -2
   ],
   "oled_rotation_offset": [
-    0,
     -2,
+    0,
     5
   ],
   "screw_offsets": [
