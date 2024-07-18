@@ -149,8 +149,15 @@ def make_dactyl():
         if (encoder_in_wall(side)):
             encoder_yes = True
 
-        if oled_yes and track_yes:
-            wide = tbiw_left_wall_x_offset_override
+        if oled_yes and oled_type == "ILI9341":
+            left_wall_x_offset = oled_left_wall_x_offset_override
+            wide = oled_left_wall_x_offset_override
+            offsets = [
+                wide, wide, wide, wide, wide, wide, wide, wide
+            ]
+        elif oled_yes and track_yes:
+            wide = oled_left_wall_x_offset_override
+            left_wall_x_offset = oled_left_wall_x_offset_override
             shift_at = 0
             offsets = [
                 wide, wide, wide, wide, wide, wide, wide, wide
