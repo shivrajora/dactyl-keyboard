@@ -3,7 +3,7 @@
   "oled_mount_height": 65.0,
   "oled_mount_width": 49.0,
   "oled_mount_rim": 2.5,
-  "oled_mount_depth": 8.0,
+  "oled_mount_depth": 10.0,
   "oled_mount_cut_depth": 20.0,
   "oled_mount_undercut": 1.0,
   "oled_mount_undercut_height": 6.0,
@@ -21,13 +21,13 @@
   ],
   "oled_translation_offset": [
     0,
-    -15,
-    4
+    -14,
+    5
   ],
   "oled_rotation_offset": [
     -8,
-    -1,
-    5
+    -2.5,
+    8
   ],
   "oled_left_wall_x_offset_override": 60.0,
   "oled_left_wall_z_offset_override": 0.0,
