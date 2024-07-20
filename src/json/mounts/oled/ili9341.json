@@ -29,7 +29,7 @@
     -2.5,
     8
   ],
-  "oled_left_wall_x_offset_override": 60.0,
+  "oled_left_wall_x_offset_override": 62.0,
   "oled_left_wall_z_offset_override": 0.0,
   "oled_left_wall_lower_y_offset": 12.0,
   "oled_left_wall_lower_z_offset": 5.0,
