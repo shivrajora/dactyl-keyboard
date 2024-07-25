@@ -1652,23 +1652,47 @@ def make_dactyl():
         cyl2 = translate(rotate(cylinder(height / 2, depth), (90, 0, 0)), (-width / 2, 0, 0))
         return union([shape, cyl1, cyl2])
 
-    def usb_c_hole():
-        debugprint('usb_c_hole()')
-        return usb_c_shape(usb_c_width, usb_c_height, 20)
 
-    def usb_c_mount_point():
-        width = usb_c_width * 1.2
-        height = usb_c_height * 1.2
-        front_bit = translate(usb_c_shape(usb_c_width + 2, usb_c_height + 2, wall_thickness / 2), (0, (wall_thickness / 2) + 1, 0))
-        shape = union([front_bit, usb_c_hole()])
-        shape = translate(shape,
+    def usb_c_insert(data):
+        mount = import_file(path.join(parts_path, "mounts", "usb_c_mount"))
+        mount = rotate(mount, data["rot"])
+        return translate(mount,
                           (
-                              usb_holder_position[0] + usb_c_xoffset,
-                              usb_holder_position[1] + usb_c_yoffset,
+                              usb_holder_position[0] + data["pos"][0],
+                              usb_holder_position[1] + data["pos"][1],
                               usb_c_zoffset,
                           )
                           )
+
+    def usb_c_hole(data):
+        debugprint('usb_c_hole()')
+        shape = usb_c_shape(usb_c_width, usb_c_height, 20)
+        shape = translate(shape, data["pos"])
+        shape = rotate(shape, data["rot"])
         return shape
+
+    def usb_c_mount_point(data):
+        width = 6
+        height = 17
+        shape = box(width, height, 20)
+        shape = rotate(shape, data["rot"])
+        return translate(shape,
+                          (
+                              usb_holder_position[0] + data["pos"][0],
+                              usb_holder_position[1] + data["pos"][1],
+                              usb_c_zoffset,
+                          )
+                          )
+        # front_bit = translate(usb_c_shape(usb_c_width + 2, usb_c_height + 2, wall_thickness / 2), (0, (wall_thickness / 2) + 1, 0))
+        # shape = union([front_bit, usb_c_hole()])
+        # shape = translate(shape,
+        #                   (
+        #                       usb_holder_position[0] + usb_c_xoffset,
+        #                       usb_holder_position[1] + usb_c_yoffset,
+        #                       usb_c_zoffset,
+        #                   )
+        #                   )
+        # return shape
 
     external_start = list(
         # np.array([0, -3, 0])
@@ -2447,7 +2471,13 @@ def make_dactyl():
                 s2 = difference(s2, [usb_holder_hole()])
 
             if controller_mount_type in ['USB_C_WALL']:
-                s2 = difference(s2, [usb_c_mount_point()])
+                for data in usb_c_mounts[side]:
+                    s2 = difference(s2, [usb_c_mount_point(data)])
+                    s2 = union([s2, usb_c_insert(data)])
+
+            # if controller_mount_type in ['USB_C_WALL']:
+            #     s2 = difference(s2, [usb_c_mount_point()])
+            #     s2 = union([s2, usb_c_insert()])
 
             if controller_mount_type in ['RJ9_USB_TEENSY', 'RJ9_USB_WALL']:
                 s2 = difference(s2, [rj9_space()])

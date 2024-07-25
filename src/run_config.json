@@ -231,6 +231,32 @@
   "blackpill_holder_xoffset": -6.5,
   "external_holder_xoffset": -5.0,
   "external_holder_yoffset": -4.5,
+  "usb_c_mounts": {
+    "right": [
+    {
+      "type": "clip_in",
+      "pos": [-6, -1, 8],
+      "rot": [0, 90, 0]
+    },
+    {
+      "type": "clip_in",
+      "pos": [-66, -5, 8],
+      "rot": [0, 90, 6]
+    }
+  ],
+    "left": [
+    {
+      "type": "clip_in",
+      "pos": [-6, -1, 8],
+      "rot": [0, 90, 0]
+    },
+    {
+      "type": "clip_in",
+      "pos": [-6, -1, 8],
+      "rot": [0, 90, 0]
+    }
+  ]
+  },
   "usb_c_width": 9.5,
   "usb_c_height": 3.5,
   "usb_c_xoffset": -3,
