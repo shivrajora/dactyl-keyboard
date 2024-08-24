@@ -2,6 +2,10 @@ from clusters.trackball_orbyl import TrackballOrbyl
 import json
 import os
 
+breakout_width = 25
+breakout_height = 38.1
+joystick_hole_radius = 7
+
 
 class JoystickWild(TrackballOrbyl):
     key_to_thumb_rotation = [] # may no longer be used?
@@ -37,6 +41,7 @@ class JoystickWild(TrackballOrbyl):
         ]
     ]
 
+
     @staticmethod
     def name():
         return "JOYSTICK_WILD"
@@ -64,6 +69,7 @@ class JoystickWild(TrackballOrbyl):
         super().__init__(parent_locals)
         for item in parent_locals:
             globals()[item] = parent_locals[item]
+        self.is_tb = False
 
     def position_rotation(self):
         rot = [10, -15, 5]
@@ -133,36 +139,44 @@ class JoystickWild(TrackballOrbyl):
         return shape
 
 
+    def joystick_mount(self):
+        pcb_mount = box(breakout_width + 3, breakout_height + 3, 5)
+        pcb_mount = difference(pcb_mount, [translate(box(breakout_width, breakout_height, 5), (0, 0, -2))])
+        pcb_mount = difference(pcb_mount, [cylinder(joystick_hole_radius, 20)])
+        origin = self.thumborigin()
+        origin = [origin[0] - 20, origin[1] - 20, origin[2]]
+        return translate(rotate(pcb_mount, (20, 0, 30)), origin)
+
     def thumb_connectors(self, side="right"):
         print('thumb_connectors()')
         hulls = []
 
         # bottom 2 to tb
-        hulls.append(
-            triangle_hulls(
-                [
-                    self.track_place(self.tb_post_l()),
-                    self.bl_place(web_post_tl()),
-                    self.track_place(self.tb_post_bl()),
-                    self.bl_place(web_post_tr()),
-                    self.br_place(web_post_tl()),
-                    self.track_place(self.tb_post_bl()),
-                    self.br_place(web_post_tr()),
-                    self.track_place(self.tb_post_br()),
-                    self.br_place(web_post_tr()),
-                    self.track_place(self.tb_post_br()),
-                    self.mr_place(web_post_br()),
-                    self.track_place(self.tb_post_r()),
-                    self.mr_place(web_post_bl()),
-                    self.tl_place(web_post_br( )),
-                    self.track_place(self.tb_post_r()),
-                    self.tl_place(web_post_bl( )),
-                    self.track_place(self.tb_post_tr()),
-                    cluster_key_place(web_post_bl(), 0, cornerrow),
-                    self.track_place(self.tb_post_tl()),
-                ]
-            )
-        )
+        # hulls.append(
+        #     triangle_hulls(
+        #         [
+        #             self.track_place(self.tb_post_l()),
+        #             self.bl_place(web_post_tl()),
+        #             self.track_place(self.tb_post_bl()),
+        #             self.bl_place(web_post_tr()),
+        #             self.br_place(web_post_tl()),
+        #             self.track_place(self.tb_post_bl()),
+        #             self.br_place(web_post_tr()),
+        #             self.track_place(self.tb_post_br()),
+        #             self.br_place(web_post_tr()),
+        #             self.track_place(self.tb_post_br()),
+        #             self.mr_place(web_post_br()),
+        #             self.track_place(self.tb_post_r()),
+        #             self.mr_place(web_post_bl()),
+        #             self.tl_place(web_post_br( )),
+        #             self.track_place(self.tb_post_r()),
+        #             self.tl_place(web_post_bl( )),
+        #             self.track_place(self.tb_post_tr()),
+        #             cluster_key_place(web_post_bl(), 0, cornerrow),
+        #             self.track_place(self.tb_post_tl()),
+        #         ]
+        #     )
+        # )
 
         # bottom left
         hulls.append(
@@ -223,7 +237,8 @@ class JoystickWild(TrackballOrbyl):
             )
         )
 
-        return union(hulls)
+        result = union(hulls)
+        return union([result, self.joystick_mount()])
 
     # todo update walls for wild track, still identical to orbyl
     def walls(self, side="right"):

@@ -20,6 +20,7 @@ from clusters.trackball_orbyl import TrackballOrbyl
 from clusters.trackball_two import TrackballTwo
 from clusters.trackball_orbyl5 import TrackballOrbyl5
 from clusters.trackball_wilder import TrackballWild
+from clusters.joystick_wilder import JoystickWild
 from clusters.trackball_three import TrackballThree
 from clusters.trackball_cj import TrackballCJ
 from clusters.custom_cluster import CustomCluster
@@ -1766,8 +1767,10 @@ def make_dactyl():
 
         # tb_file = path.join(parts_path, r"trackball_socket_body_34mm")
         # tbcut_file = path.join(parts_path, r"trackball_socket_cutter_34mm")
-
-        if btus:
+        if joystick:
+            tb_file = path.join(parts_path, r"joystick_mount")
+            tbcut_file = path.join(parts_path, r"phatter_btu_socket_cutter")
+        elif btus:
             tb_file = path.join(parts_path, r"phat_btu_socket")
             tbcut_file = path.join(parts_path, r"phatter_btu_socket_cutter")
         elif ceramic:
@@ -1792,6 +1795,11 @@ def make_dactyl():
         shape = import_file(tb_file)
         sensor = import_file(sens_file)
         cutter = import_file(tbcut_file)
+
+        if joystick:
+            shape = rotate(shape, (0, 0, 35))
+            shape = translate(shape, (0, 0, 1.2))
+
         if not btus:
             cutter = union([cutter, import_file(senscut_file)])
 
@@ -2548,6 +2556,9 @@ def make_dactyl():
                 if cluster(side).has_btus():
                     shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
+                elif joystick:
+                    shape = difference(shape, [tbcutout])
+                    shape = union([shape, tb])
                 elif ceramic:
                     shape = difference(shape, [tbcutout])
                     shape = union([shape, tb])
@@ -2842,6 +2853,8 @@ def make_dactyl():
             clust = TrackballOrbyl5(all_merged)
         elif style == TrackballWild.name():
             clust = TrackballWild(all_merged)
+        elif style == JoystickWild.name():
+            clust = JoystickWild(all_merged)
         elif style == TrackballThree.name():
             clust = TrackballThree(all_merged)
         elif style == TrackballOne.name():
