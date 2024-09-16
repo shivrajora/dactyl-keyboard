@@ -168,7 +168,7 @@ def make_dactyl():
             wide = oled_left_wall_x_offset_override
             shift_at = -4  # shift from wide to short
             offsets = [
-                wide, wide, wide, wide, short, short, short, short
+                wide, wide, wide, wide, wide, wide, wide, wide
             ]
         elif encoder_yes and track_yes:
             left_wall_x_offset = tbiw_left_wall_x_offset_override
