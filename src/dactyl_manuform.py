@@ -1158,7 +1158,7 @@ def make_dactyl():
                 y_offset = tbiw_left_wall_lower_y_offset
                 z_offset = tbiw_left_wall_lower_z_offset
             else:
-                y_offset = 0.0
+                y_offset = 10.0
                 z_offset = 0.0
 
             return list(pos - np.array([
@@ -2186,12 +2186,12 @@ def make_dactyl():
     def oled_undercut_mount_frame(side='right'):
         mount_ext_width = oled_mount_width + 2 * oled_mount_rim
         mount_ext_height = oled_mount_height + 2 * oled_mount_undercut_height_rim
-        hole = box(mount_ext_width, mount_ext_height - 12, oled_mount_cut_depth + .01)
+        hole = box(mount_ext_width, mount_ext_height - 6, oled_mount_cut_depth + .01)
 
         shape = box(mount_ext_width, mount_ext_height, oled_mount_depth)
         shape = difference(shape, [box(oled_mount_width, oled_mount_height, oled_mount_depth + .1)])
         undercut = box(
-            oled_mount_width + 2 * oled_mount_undercut,
+            oled_mount_width + 2 * oled_mount_undercut + 2,
             oled_mount_height + 2 * oled_mount_undercut_height,
             oled_mount_depth)
         undercut = translate(undercut, (0., 0., -oled_mount_undercut_thickness))

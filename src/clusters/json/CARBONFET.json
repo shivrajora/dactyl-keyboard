@@ -1,8 +1,8 @@
 {
   "thumb_offsets": [
-    0,
+    -4,
     -3,
-    6
+    1
   ],
-  "thumb_screw": [-27, -56, 0]
+  "thumb_screw": [-27, -58, 0]
 }
