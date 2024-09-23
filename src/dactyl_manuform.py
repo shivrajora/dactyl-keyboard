@@ -1174,6 +1174,23 @@ def make_dactyl():
             y_offset = 0.0
             z_offset = 0.0
 
+
+        if row > 0:
+            old_x = wall_x_offsets[row - 1]
+
+            if old_x > wall_x_offsets[row]:
+                y_offset -= 3
+            elif old_x < wall_x_offsets[row]:
+                y_offset -= 3
+
+        if row < nrows - 2:
+            next_x = wall_x_offsets[row + 1]
+
+            if next_x > wall_x_offsets[row]:
+                y_offset += 3
+            elif next_x < wall_x_offsets[row]:
+                y_offset += 3
+
         return list(pos - np.array([wall_x_offsets[row], -y_offset, left_wall_z_offset + z_offset]))
 
 
@@ -1788,7 +1805,7 @@ def make_dactyl():
         else:
             sens_file = path.join(parts_path, r"trackball_sensor_mount")
 
-        senscut_file = path.join(parts_path, r"trackball_sensor_cutter")
+        senscut_file = path.join(parts_path, r"trackball_sensor_cutter_short")
 
         # shape = import_file(tb_file)
         # # shape = difference(shape, [import_file(senscut_file)])
