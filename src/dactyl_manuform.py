@@ -2751,7 +2751,24 @@ def make_dactyl():
                                        ))
                     shape = difference(shape, [controller_shape])
                     shape = union([shape, holder])
-
+                elif controller_mount_type == "ASSIMILATOR":
+                    controller_shape = translate(box(36.5, 57.5, 5),
+                                                 (
+                                                     external_start[0] + external_holder_xoffset,
+                                                     external_start[1] + external_holder_yoffset - 24,
+                                                     external_holder_height / 2 - 7
+                                                 ))
+                    basic_holder = build_assimilator_holder()
+                    if side == "left":
+                        basic_holder = mirror(basic_holder, 'YZ')
+                    holder = translate(basic_holder,
+                                       (
+                                           external_start[0] + external_holder_xoffset,
+                                           external_start[1] + external_holder_yoffset - 28.25,
+                                           external_holder_height / 2 - 1.5
+                                       ))
+                    # shape = difference(shape, [controller_shape])
+                    shape = union([shape, holder])
                 # export_file(shape=rest, fname=path.join(save_path, config_name + r"_right_wrist_rest"))
                 if magnet_bottom:
                     shape = difference(shape, [translate(magnet, (0, 0, 0.05 - (screw_insert_height / 2))) for magnet in list(tool)])

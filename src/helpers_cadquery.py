@@ -442,6 +442,81 @@ pcb_v2 = {
     ]
 }
 
+pcb_v3 = {
+    "l": 32,
+    "w": 30.0,
+    "h": 1.15,
+    "h2": -2.2,
+    "h3": 4.4,
+    "offsets": {
+        "l": 0,
+        "w": 0,
+        "h": 1.5
+    },
+    "port_cuts": [
+        {
+            "rot": [0, 0, 0],
+            "relative_to": "h",
+            "offset": [15.25, 17, -6],
+            "w": 11,
+            "h": 4.5,
+            "l": 25
+        },
+        {
+            "rot": [0, 0, 0],
+            "offset": [15.25, 17, 0.25],
+            "w": 11,
+            "h": 4.5,
+            "l": 40
+        },
+        {
+            "rot": [0, 0, 0],
+            "offset": [15.25, 17, -3],
+            "w": 11,
+            "h": 10,
+            "l": 40
+        },
+    ]
+}
+
+
+def usb_c_cut_shape(width, height, depth):
+    shape = box(width, depth, height)
+    cyl1 = translate(rotate(cylinder(height / 2, depth), (90, 0, 0)), (width / 2, 0, 0))
+    cyl2 = translate(rotate(cylinder(height / 2, depth), (90, 0, 0)), (-width / 2, 0, 0))
+    return union([shape, cyl1, cyl2])
+
+
+def build_assimilator_holder():
+    width = 30
+    length = 32
+    height = 3.5
+    holder_hole_height = 16.5
+
+    back_y = length / 2
+    wall = wp().box(width + 8, 9, holder_hole_height + 1).translate((0, length / 2 + 4, height))
+    wall = wall.edges(">Z and |Y").fillet(3)
+    groove_neg = wp().box(width + 5, 4, holder_hole_height + 5).translate((0, back_y + 3, 2.25))
+    groove_neg = groove_neg.cut(
+        wp().box(width, 30, holder_hole_height + 1).translate((0, back_y + 3, -2.3)))
+    inset = wp().box(width - 2, 10, holder_hole_height + 1).translate((0, back_y + 7, -2.75))
+    inset = inset.edges(">Z and |Y").fillet(2)
+    wall = wall.cut(inset)
+    wall = wall.cut(groove_neg)
+
+    height_off = -(holder_hole_height + 1) / 2
+    r_switch_pos = (3 - (width / 2), length / 2,  height_off + height + 1.9)
+    pc_usb_pos = (11.5 - (width / 2), length / 2, height_off + height + 1.6)
+    inter_usb_pos = ((width / 2) - 5, length / 2, height_off + height + 1.6)
+
+    usb_c_hole1 = usb_c_cut_shape(9, 4, 20).translate(pc_usb_pos)
+    usb_c_hole2 = usb_c_cut_shape(9, 4, 20).translate(inter_usb_pos)
+    reset_hole = wp().cylinder(20, 2.5).rotate((1, 0, 0), (-1, 0, 0), 90).translate(r_switch_pos)
+    platform = wp().box(width, length, height).translate((0, 0, height_off))
+    wall = wall.cut(usb_c_hole1).cut(usb_c_hole2).cut(reset_hole)
+    wall = wall.union(platform)
+    return wall
+
 
 def build_holder(pcb):
     pcb_box = wp().box(pcb["w"], pcb["l"], pcb["h"])
