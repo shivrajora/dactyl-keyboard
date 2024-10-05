@@ -498,7 +498,7 @@ def build_assimilator_holder():
     wall = wall.edges(">Z and |Y").fillet(3)
     groove_neg = wp().box(width + 5, 4, holder_hole_height + 5).translate((0, back_y + 3, 2.25))
     groove_neg = groove_neg.cut(
-        wp().box(width, 30, holder_hole_height + 1).translate((0, back_y + 3, -2.3)))
+        wp().bo-----------------------------x(width, 30, holder_hole_height + 1).translate((0, back_y + 3, -2.3)))
     inset = wp().box(width - 2, 10, holder_hole_height + 1).translate((0, back_y + 7, -2.75))
     inset = inset.edges(">Z and |Y").fillet(2)
     wall = wall.cut(inset)
