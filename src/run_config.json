@@ -10,6 +10,7 @@
   "show_pcbs": false,
   "color": "yellow",
   "resin": false,
+  "tilt_resin": true,
   "nrows": 6,
   "ncols": 6,
   "alpha": 0.26179916666666664,

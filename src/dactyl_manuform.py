@@ -2513,7 +2513,7 @@ def make_dactyl():
             if controller_mount_type in ['BLACKPILL_EXTERNAL']:
                 s2 = difference(s2, [blackpill_mount_hole()])
 
-            if controller_mount_type in ['EXTERNAL', 'EXTERNAL_BREAKOUT']:
+            if controller_mount_type in ['EXTERNAL', 'EXTERNAL_BREAKOUT', 'ASSIMILATOR']:
                 s2 = difference(s2, [external_mount_hole()])
 
             if controller_mount_type in ['None']:
@@ -2752,20 +2752,22 @@ def make_dactyl():
                     shape = difference(shape, [controller_shape])
                     shape = union([shape, holder])
                 elif controller_mount_type == "ASSIMILATOR":
-                    controller_shape = translate(box(36.5, 57.5, 5),
-                                                 (
-                                                     external_start[0] + external_holder_xoffset,
-                                                     external_start[1] + external_holder_yoffset - 24,
-                                                     external_holder_height / 2 - 7
-                                                 ))
-                    basic_holder = build_assimilator_holder()
+                    basic_holder = rotate(import_file(path.join(parts_path, "assimilator_base")), (0, 0, 180))
+                    # basic_holder = translate(basic_holder)
+                    # controller_shape = translate(box(36.5, 57.5, 5),
+                    #                              (
+                    #                                  external_start[0] + external_holder_xoffset,
+                    #                                  external_start[1] + external_holder_yoffset - 24,
+                    #                                  external_holder_height / 2 - 7
+                    #                              ))
+                    # basic_holder = build_assimilator_holder()
                     if side == "left":
                         basic_holder = mirror(basic_holder, 'YZ')
                     holder = translate(basic_holder,
                                        (
-                                           external_start[0] + external_holder_xoffset,
-                                           external_start[1] + external_holder_yoffset - 28.25,
-                                           external_holder_height / 2 - 1.5
+                                           external_start[0] + external_holder_xoffset + 13,
+                                           external_start[1] + external_holder_yoffset + 8,
+                                           external_holder_height / 2 - 10.5
                                        ))
                     # shape = difference(shape, [controller_shape])
                     shape = union([shape, holder])
@@ -2798,7 +2800,7 @@ def make_dactyl():
         base = baseplate(walls_r, side='right')
         rest_r = wrist_rest(mod_r, base, side="right")
 
-        if resin and ENGINE == "cadquery":
+        if resin and tilt_resin and ENGINE == "cadquery":
             mod_r = rotate(mod_r, (333.04, 43.67, 85.00))
         export_file(shape=mod_r, fname=path.join(save_path, right_name + r"_TOP"))
 
