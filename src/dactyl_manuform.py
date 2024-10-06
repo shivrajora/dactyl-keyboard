@@ -2766,7 +2766,7 @@ def make_dactyl():
                     holder = translate(basic_holder,
                                        (
                                            external_start[0] + external_holder_xoffset + 13,
-                                           external_start[1] + external_holder_yoffset + 8,
+                                           external_start[1] + external_holder_yoffset + 7.5,
                                            external_holder_height / 2 - 10.5
                                        ))
                     # shape = difference(shape, [controller_shape])
