@@ -7,7 +7,7 @@
   "tb_socket_rotation_offset": [
     0,
     0,
-    -40
+    40
   ],
   "tbiw_translational_offset": [
     -6,
@@ -39,10 +39,10 @@
     -2, -5, 0
   ],
   "left_encoder_wall_offset": [
-    -85, -2, 43
+    -85, -12, 42
   ],
   "left_encoder_wall_rotation": [
-    -2, -5, 0
+    -7, -5, 7
   ],
   "tbiw_encoder_wall_offset": [
     -85, -4, 41
