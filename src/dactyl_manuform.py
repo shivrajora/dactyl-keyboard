@@ -299,7 +299,7 @@ def make_dactyl():
 
     if data is None:
         print(f">>> Using config run_config.json on Git branch {local_branch}")
-        data = load_json(os.path.join("src", "run_config.json"), None, save_path)
+        data = load_json(os.path.join("src", "run_config.json"), save_path)
         # with open(os.path.join("src", "run_config.json"), mode='r') as fid:
         #     data = json.load(fid)
 
@@ -316,7 +316,7 @@ def make_dactyl():
         save_path = path.join(save_path, overrides_name)
         override_file = path.join(save_path, overrides_name + '.json')
         with open(override_file, mode='r') as fid:
-            data = load_json(override_file, data, save_path)
+            data = load_json(override_file, save_path)
 
     try:
         if data["branch"] not in ["", None]:
