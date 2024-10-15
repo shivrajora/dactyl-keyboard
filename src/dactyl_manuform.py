@@ -1595,70 +1595,35 @@ def make_dactyl():
         encoder_row = encoder_wall_row  #  nrows - 3
         # row_position = key_position([0, 0, 0], -1, encoder_row)
         # row_position[1] += 10
-        def low_prep_position(sh):
-            if trackball_is_in_wall(side):
+        def low_prep_position(sh, prefix=side):
+            if trackball_is_in_wall(side) and prefix == side:
                 return translate(rotate(sh, tbiw_encoder_wall_rotation), tbiw_encoder_wall_offset)
-            elif side == "right":
+            elif prefix == "right":
                 return translate(rotate(sh, right_encoder_wall_rotation), right_encoder_wall_offset)
-
+            elif prefix == "other":
+                return translate(rotate(sh, other_encoder_wall_rotation), other_encoder_wall_offset)
             return translate(rotate(sh, left_encoder_wall_rotation), left_encoder_wall_offset)
 
-        def high_prep_position(sh):
-            return translate(rotate(sh, (-4, -38, 10)), (6, 0, -15))
+        def handle_ec11(shape, prefix="right"):
+            ec11_mount_low = low_prep_position(rotate(single_plate(side=side), (0, 0, 90)), prefix=prefix)
 
-        if encoder_type(side) == "ec11":
-            # ec11_mount_high = high_prep_position(rotate(import_file(path.join(parts_path, "ec11_mount_2")), (0, 0, 90)))
-            #
-            # ec11_mount_high = key_place(ec11_mount_high, -1, 0)
-
-            # ec11_mount_low = low_prep_position(rotate(import_file(path.join(parts_path, "ec11_mount_2")), (0, 0, 90)))
-            ec11_mount_low = low_prep_position(rotate(single_plate(side=side), (0, 0, 90)))
-
-            # ec11_mount_low = key_place(ec11_mount_low, -1, encoder_row)
-
-            # encoder_cut_high = key_place(high_prep_position(box(12, 13, 20)), -1, 0)
-            encoder_cut_low = low_prep_position(box(keyswitch_width, keyswitch_height, 20))
-
-            # encoder_cut_high = translate(rotate(encoder_cut_high, rot), [high[0], high[1] + 1, high[2]])
-
-            # enconder_spot = key_position([-10, -5, 13.5], 0, cornerrow)
-            # ec11_mount_high = import_file(path.join(parts_path, "ec11_mount_2"))
-            # ec11_mount_high = translate(rotate(ec11_mount_high, rot), high)
-            # encoder_cut_high = box(11, 13, 20)
-            # encoder_cut_high = translate(rotate(encoder_cut_high, rot), [high[0], high[1] + 1, high[2]])
-            #
-            # ec11_mount_low = import_file(path.join(parts_path, "ec11_mount_2"))
-            # ec11_mount_low = translate(rotate(ec11_mount_low, rot), low)
-            # encoder_cut_low = box(11, 13, 20)
-            # encoder_cut_low = translate(rotate(encoder_cut_low, rot), [low[0], low[1] + 1, low[2]])
+            encoder_cut_low = low_prep_position(box(keyswitch_width, keyswitch_height, 20), prefix=prefix)
 
             shape = difference(shape, [encoder_cut_low])
             shape = union([shape, ec11_mount_low])
             # encoder_mount = translate(rotate(encoder_mount, (0, 0, 20)), (-27, -4, -15))
             return shape
-        elif encoder_type(side) == "wheel":
+
+        def handle_wheel(shape, prefix="right"):
             wheel_width = 17.3
             wheel_height = 15
             wheel_cut_low = box(wheel_width, wheel_height, 15)
-            wheel_mount_low = translate(difference(box(wheel_width + 4, wheel_height + 4, 3), [wheel_cut_low]), (0, 0, -2))
+            wheel_mount_low = translate(difference(box(wheel_width + 4, wheel_height + 4, 3), [wheel_cut_low]),
+                                        (0, 0, -2))
             # wheel_cut_low = key_place(box(17.2, 13.5, 8), -1, encoder_row)
 
-            wheel_cut_low = low_prep_position(wheel_cut_low)
-            wheel_mount_low = low_prep_position(wheel_mount_low)
-            # encoder_cut_low = key_place(low_prep_position(box(keyswitch_width, keyswitch_height, 20)), -1, encoder_row)
-
-            # encoder_cut_high = translate(rotate(encoder_cut_high, rot), [high[0], high[1] + 1, high[2]])
-
-            # enconder_spot = key_position([-10, -5, 13.5], 0, cornerrow)
-            # ec11_mount_high = import_file(path.join(parts_path, "ec11_mount_2"))
-            # ec11_mount_high = translate(rotate(ec11_mount_high, rot), high)
-            # encoder_cut_high = box(11, 13, 20)
-            # encoder_cut_high = translate(rotate(encoder_cut_high, rot), [high[0], high[1] + 1, high[2]])
-            #
-            # ec11_mount_low = import_file(path.join(parts_path, "ec11_mount_2"))
-            # ec11_mount_low = translate(rotate(ec11_mount_low, rot), low)
-            # encoder_cut_low = box(11, 13, 20)
-            # encoder_cut_low = translate(rotate(encoder_cut_low, rot), [low[0], low[1] + 1, low[2]])
+            wheel_cut_low = low_prep_position(wheel_cut_low, prefix)
+            wheel_mount_low = low_prep_position(wheel_mount_low, prefix)
 
             shape = difference(shape, [wheel_cut_low])
             shape = union([shape, wheel_mount_low])
@@ -1666,6 +1631,21 @@ def make_dactyl():
             # shape = union([shape, ec11_mount_low])
             # encoder_mount = translate(rotate(encoder_mount, (0, 0, 20)), (-27, -4, -15))
             return shape
+        def high_prep_position(sh):
+            return translate(rotate(sh, (-4, -38, 10)), (6, 0, -15))
+
+        if encoder_type(side) == "ec11":
+            shape = handle_ec11(shape, prefix=side)
+        elif encoder_type(side) == "wheel":
+            shape = handle_wheel(shape, prefix=side)
+
+        if other_encoder_side == side:
+            if other_encoder == "ec11":
+                shape = handle_ec11(shape, prefix="other")
+            elif other_encoder == "wheel":
+                shape = handle_wheel(shape, prefix="other")
+
+        return shape
 
     def usb_c_shape(width, height, depth):
         shape = box(width, depth, height)
