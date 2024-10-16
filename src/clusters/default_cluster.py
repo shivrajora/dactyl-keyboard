@@ -10,6 +10,24 @@ class DefaultCluster(object):
         -3,
         8
     ]
+    tl_pos = [-32.5, -14.5, -2.5]
+    tl_rot = [7.5, -18, 10]
+
+    tr_pos = [-12, -16, 3]
+    tr_rot = [10, -15, 10]
+
+    mr_pos = [-29, -40, -13]
+    mr_rot = [-6, -34, 48]
+
+    ml_pos = [-51, -25, -12]
+    ml_rot = [6, -34, 40]
+
+    br_pos = [-37.8, -55.3, -25.3]
+    br_rot = [-16, -33, 54]
+
+    bl_pos = [-56.3, -43.3, -23.5]
+    bl_rot = [-4, -35, 52]
+
     thumb_screw = [-24, -65, 0]
     thumb_plate_tr_rotation = 0
     thumb_plate_tl_rotation = 0
@@ -70,43 +88,43 @@ class DefaultCluster(object):
 
     def tl_place(self, shape):
         debugprint('tl_place()')
-        shape = rotate(shape, [7.5, -18, 10])
-        shape = translate(shape, [-32.5, -14.5, -2.5])
+        shape = rotate(shape, self.tl_rot)
+        shape = translate(shape, self.tl_pos)
         shape = self.thumb_place(shape)
         return shape
 
     def tr_place(self, shape):
         debugprint('tr_place()')
-        shape = rotate(shape, [10, -15, 10])
-        shape = translate(shape, [-12, -16, 3])
+        shape = rotate(shape, self.tr_rot)
+        shape = translate(shape, self.tr_pos)
         shape = self.thumb_place(shape)
         return shape
 
     def mr_place(self, shape):
         debugprint('mr_place()')
-        shape = rotate(shape, [-6, -34, 48])
-        shape = translate(shape, [-29, -40, -13])
+        shape = rotate(shape, self.mr_rot)
+        shape = translate(shape, self.mr_pos)
         shape = self.thumb_place(shape)
         return shape
 
     def ml_place(self, shape):
         debugprint('ml_place()')
-        shape = rotate(shape, [6, -34, 40])
-        shape = translate(shape, [-51, -25, -12])
+        shape = rotate(shape, self.ml_rot)
+        shape = translate(shape, self.ml_pos)
         shape = self.thumb_place(shape)
         return shape
 
     def br_place(self, shape):
         debugprint('br_place()')
-        shape = rotate(shape, [-16, -33, 54])
-        shape = translate(shape, [-37.8, -55.3, -25.3])
+        shape = rotate(shape, self.br_rot)
+        shape = translate(shape, self.br_pos)
         shape = self.thumb_place(shape)
         return shape
 
     def bl_place(self, shape):
         debugprint('bl_place()')
-        shape = rotate(shape, [-4, -35, 52])
-        shape = translate(shape, [-56.3, -43.3, -23.5])
+        shape = rotate(shape, self.bl_rot)
+        shape = translate(shape, self.bl_pos)
         shape = self.thumb_place(shape)
         return shape
 

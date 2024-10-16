@@ -48,10 +48,10 @@
     0, -5, 1
   ],
   "left_encoder_wall_offset": [
-    -91, 3, 35
+    -85, -13, 34
   ],
   "left_encoder_wall_rotation": [
-    0, -4, -4
+    -5, -4, 0
   ],
   "left_left_wall_x_join_offset": -0.33,
   "left_left_wall_y_join_offset": -5,

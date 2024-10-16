@@ -1174,24 +1174,26 @@ def make_dactyl():
             y_offset = 0.0
             z_offset = 0.0
 
-
+        x_offset = wall_x_offsets[row]
         if row > 0:
             old_x = wall_x_offsets[row - 1]
 
-            if old_x > wall_x_offsets[row]:
+            if old_x > x_offset:
                 y_offset -= 3
-            elif old_x < wall_x_offsets[row]:
+            elif old_x < x_offset:
                 y_offset -= 3
 
         if row < nrows - 2:
             next_x = wall_x_offsets[row + 1]
 
-            if next_x > wall_x_offsets[row]:
+            if next_x > x_offset:
                 y_offset += 3
-            elif next_x < wall_x_offsets[row]:
+            elif next_x < x_offset:
                 y_offset += 3
+                z_offset -= 0.6
+                x_offset -= 0.3
 
-        return list(pos - np.array([wall_x_offsets[row], -y_offset, left_wall_z_offset + z_offset]))
+        return list(pos - np.array([x_offset, -y_offset, left_wall_z_offset + z_offset]))
 
 
     def left_key_place(shape, row, direction, low_corner=False, side='right'):

@@ -4,7 +4,25 @@
     -3,
     10
   ],
-  "thumb_screw": [-18, -55, 0],
+  "tl_pos": [-32.5, -14.5, -2.5],
+  "tl_rot": [7.5, -18, 10],
+
+  "tr_pos": [-12, -16, 3],
+  "tr_rot": [10, -15, 10],
+
+  "mr_pos": [-29, -40, -13],
+  "mr_rot": [-6, -34, 48],
+
+  "ml_pos": [-51, -25, -12],
+  "ml_rot": [6, -34, 40],
+
+  "br_pos": [-37.8, -55.3, -25.3],
+  "br_rot": [-16, -33, 54],
+
+  "bl_pos": [-56.3, -43.3, -23.5],
+  "bl_rot": [-4, -35, 52],
+
+  "thumb_screw": [-16, -55, 0],
   "thumb_plate_tr_rotation": 0.0,
   "thumb_plate_tl_rotation": 0.0,
   "thumb_plate_mr_rotation": 0.0,
