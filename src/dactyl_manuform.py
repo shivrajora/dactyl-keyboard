@@ -2753,7 +2753,8 @@ def make_dactyl():
                                            external_start[1] + external_holder_yoffset + 7.5,
                                            external_holder_height / 2 - 10.5
                                        ))
-                    # shape = difference(shape, [controller_shape])
+
+                    holder = difference(holder, [walls])
                     shape = union([shape, holder])
                 # export_file(shape=rest, fname=path.join(save_path, config_name + r"_right_wrist_rest"))
                 if magnet_bottom:
