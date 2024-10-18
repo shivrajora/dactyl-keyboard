@@ -2744,7 +2744,9 @@ def make_dactyl():
                     #                              ))
                     # basic_holder = build_assimilator_holder()
                     if side == "left":
-                        basic_holder = mirror(basic_holder, 'YZ')
+                        basic_holder = mirror(basic_holder, "YZ")
+                        basic_holder = translate(basic_holder, (-26.1, 0, 0))
+
                     holder = translate(basic_holder,
                                        (
                                            external_start[0] + external_holder_xoffset + 13,
