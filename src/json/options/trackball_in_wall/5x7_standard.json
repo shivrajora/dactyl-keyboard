@@ -45,13 +45,13 @@
   "trackball_in_wall": false,
   "tbiw_ball_center_row": 0.2,
   "right_encoder_wall_offset": [
-    -85, -14, 40
+    -82, -14, 39
   ],
   "right_encoder_wall_rotation": [
     -8, -4, 0
   ],
   "left_encoder_wall_offset": [
-    -85, -14, 40
+    -82, -14, 39
   ],
   "left_encoder_wall_rotation": [
     -8, -4, 0
