@@ -1343,12 +1343,17 @@ def make_dactyl():
         print("back_wall()")
         x = 0
         shape = union([key_wall_brace(x, 0, 0, 1, web_post_tl(), x, 0, 0, 1, web_post_tr(), back=True)])
-        for i in range(ncols - 1):
-            x = i + 1
-            shape = union([shape, key_wall_brace(x, 0, 0, 1, web_post_tl(), x, 0, 0, 1, web_post_tr(), back=True)])
-            shape = union([shape, key_wall_brace(
-                x, 0, 0, 1, web_post_tl(), x - 1, 0, 0, 1, web_post_tr(), back=True
-            )])
+
+
+        if not corner_walls:
+
+            for i in range(ncols - 1):
+                x = i + 1
+                shape = union([shape, key_wall_brace(x, 0, 0, 1, web_post_tl(), x, 0, 0, 1, web_post_tr(), back=True)])
+                shape = union([shape, key_wall_brace(
+                    x, 0, 0, 1, web_post_tl(), x - 1, 0, 0, 1, web_post_tr(), back=True
+                )])
+
         shape = union([shape, key_wall_brace(
             lastcol, 0, 0, 1, web_post_tr(), lastcol, 0, 1, 0, web_post_tr(), back=True
         )])
@@ -1372,22 +1377,25 @@ def make_dactyl():
             )
         ])
 
-        for i in range(torow):
-            y = i + 1
-            shape = union([shape, key_wall_brace(
-                tocol, y - 1, 1, 0, web_post_br(), tocol, y, 1, 0, web_post_tr()
-            )])
 
-            shape = union([shape, key_wall_brace(
-                tocol, y, 1, 0, web_post_tr(), tocol, y, 1, 0, web_post_br()
-            )])
-            # STRANGE PARTIAL OFFSET
+        if not corner_walls:
+            for i in range(torow):
+                y = i + 1
+                shape = union([shape, key_wall_brace(
+                    tocol, y - 1, 1, 0, web_post_br(), tocol, y, 1, 0, web_post_tr()
+                )])
 
-        if ncols > 4:
-            shape = union([
-                shape,
-                key_wall_brace(lastcol, torow, 0, -1, web_post_br(), lastcol, torow, 1, 0, web_post_br())
-            ])
+                shape = union([shape, key_wall_brace(
+                    tocol, y, 1, 0, web_post_tr(), tocol, y, 1, 0, web_post_br()
+                )])
+
+                # STRANGE PARTIAL OFFSET
+
+            if ncols > 4:
+                shape = union([
+                    shape,
+                    key_wall_brace(lastcol, torow, 0, -1, web_post_br(), lastcol, torow, 1, 0, web_post_br())
+                ])
         return shape
 
 
@@ -1403,38 +1411,40 @@ def make_dactyl():
             (lambda sh: left_key_place(sh, 0, 1, side=side)), -1, 0, web_post(),
         )])
 
-        for i in range(lastrow):
-            y = i
-            low = (y == (lastrow - 1))
-            temp_shape1 = wall_brace(
-                (lambda sh: left_key_place(sh, y, 1, side=side)), -1, 0, web_post(),
-                (lambda sh: left_key_place(sh, y, -1, low_corner=low, side=side)), -1, 0, web_post(),
-            )
-            temp_shape2 = hull_from_shapes((
-                key_place(web_post_tl(), 0, y),
-                key_place(web_post_bl(), 0, y),
-                left_key_place(web_post(), y, 1, side=side),
-                left_key_place(web_post(), y, -1, low_corner=low, side=side),
-            ))
-            shape = union([shape, temp_shape1])
-            shape = union([shape, temp_shape2])
+        if not corner_walls:
+            for i in range(lastrow):
+                y = i
+                low = (y == (lastrow - 1))
+                temp_shape1 = wall_brace(
+                    (lambda sh: left_key_place(sh, y, 1, side=side)), -1, 0, web_post(),
+                    (lambda sh: left_key_place(sh, y, -1, low_corner=low, side=side)), -1, 0, web_post(),
+                )
+                temp_shape2 = hull_from_shapes((
+                    key_place(web_post_tl(), 0, y),
+                    key_place(web_post_bl(), 0, y),
+                    left_key_place(web_post(), y, 1, side=side),
+                    left_key_place(web_post(), y, -1, low_corner=low, side=side),
+                ))
+                shape = union([shape, temp_shape1])
+                shape = union([shape, temp_shape2])
 
-        for i in range(lastrow - 1):
-            y = i + 1
-            low = (y == (lastrow - 1))
-            temp_shape1 = wall_brace(
-                (lambda sh: left_key_place(sh, y - 1, -1, side=side)), -1, 0, web_post(),
-                (lambda sh: left_key_place(sh, y, 1, side=side)), -1, 0, web_post(),
-            )
-            temp_shape2 = hull_from_shapes((
-                key_place(web_post_tl(), 0, y),
-                key_place(web_post_bl(), 0, y - 1),
-                left_key_place(web_post(), y, 1, side=side),
-                left_key_place(web_post(), y - 1, -1, side=side),
-                left_key_place(web_post(), y - 1, -1, side=side),
-            ))
-            shape = union([shape, temp_shape1])
-            shape = union([shape, temp_shape2])
+
+            for i in range(lastrow - 1):
+                y = i + 1
+                low = (y == (lastrow - 1))
+                temp_shape1 = wall_brace(
+                    (lambda sh: left_key_place(sh, y - 1, -1, side=side)), -1, 0, web_post(),
+                    (lambda sh: left_key_place(sh, y, 1, side=side)), -1, 0, web_post(),
+                )
+                temp_shape2 = hull_from_shapes((
+                    key_place(web_post_tl(), 0, y),
+                    key_place(web_post_bl(), 0, y - 1),
+                    left_key_place(web_post(), y, 1, side=side),
+                    left_key_place(web_post(), y - 1, -1, side=side),
+                    left_key_place(web_post(), y - 1, -1, side=side),
+                ))
+                shape = union([shape, temp_shape1])
+                shape = union([shape, temp_shape2])
 
         return shape
 
@@ -1447,15 +1457,18 @@ def make_dactyl():
                 lastcol, 0, 0, 1, web_post_tr(), lastcol, 0, 1, 0, web_post_tr()
             )
         ])
-        shape = union([shape, key_wall_brace(
-            col(3), bottom_key(col(3)), 0, -1, web_post_bl(), col(3), bottom_key(col(3)), 0, -1, web_post_br()
-        )])
+        if not corner_walls:
+            shape = union([shape, key_wall_brace(
+                col(3), bottom_key(col(3)), 0, -1, web_post_bl(), col(3), bottom_key(col(3)), 0, -1, web_post_br()
+            )])
         # shape = union([key_wall_brace(
         #     col(3), bottom_key(col(3)), 0, -1, web_post_bl(), col(3), bottom_key(col(3)), 0.5, -1, web_post_br()
         # )])
-        shape = union([shape, key_wall_brace(
-            col(3), bottom_key(col(3)), 0, -1, web_post_br(), col(4), bottom_key(col(4)), 0.5, -1, web_post_bl()
-        )])
+
+            shape = union([shape, key_wall_brace(
+                col(3), bottom_key(col(3)), 0, -1, web_post_br(), col(4), bottom_key(col(4)), 0.5, -1, web_post_bl()
+            )])
+
 
         min_last_col = shift_column + 2  # first_bottom_key()
         if min_last_col < 0:
@@ -1463,19 +1476,24 @@ def make_dactyl():
         if min_last_col >= ncols - 1:
             min_last_col = ncols - 1
 
-        if ncols >= min_last_col + 1:
-            for i in range(ncols - (min_last_col + 1)):
-                x = i + min_last_col + 1
-                shape = union([shape, key_wall_brace(
-                    x, bottom_key(x), 0, -1, web_post_bl(), x, bottom_key(x), 0, -1, web_post_br()
-                )])
+        if not corner_walls:
+            if ncols >= min_last_col + 1:
+                for i in range(ncols - (min_last_col + 1)):
+                    x = i + min_last_col + 1
+                    shape = union([shape, key_wall_brace(
+                        x, bottom_key(x), 0, -1, web_post_bl(), x, bottom_key(x), 0, -1, web_post_br()
+                    )])
 
-        if ncols >= min_last_col + 2:
-            for i in range(ncols - (min_last_col + 2)):
-                x = i + (min_last_col + 2)
-                shape = union([shape, key_wall_brace(
-                    x, bottom_key(x), 0, -1, web_post_bl(), x - 1, bottom_key(x - 1), 0, -1, web_post_br()
-                )])
+            if ncols >= min_last_col + 2:
+                for i in range(ncols - (min_last_col + 2)):
+                    x = i + (min_last_col + 2)
+                    shape = union([shape, key_wall_brace(
+                        x, bottom_key(x), 0, -1, web_post_bl(), x - 1, bottom_key(x - 1), 0, -1, web_post_br()
+                    )])
+        else:
+            shape = union([shape, key_wall_brace(
+                col(ncols), bottom_key(col(ncols)), 0, -1, web_post_br(), col(ncols - 1), bottom_key(col(ncols - 1)), 0.5, -1, web_post_bl()
+            )])
 
         return shape
 
@@ -1829,6 +1847,8 @@ def make_dactyl():
 
         shape, cutout, sensor = trackball_socket(btus=use_btus(cluster))
 
+        if corner_walls:
+            shape = translate(cylinder(21, 3), (0, 0, -1.5))
         shape = rotate(shape, tb_r_offset)
         shape = translate(shape, tb_t_offset)
         shape = rotate(shape, rot)
@@ -1859,10 +1879,14 @@ def make_dactyl():
         sensor = translate(sensor, pos)
 
         ball = trackball_ball()
+        ball = difference(ball, [translate(box(35, 35, 34), (0, 0, -18))])
         ball = rotate(ball, tb_r_offset)
         ball = translate(ball, tb_t_offset)
         ball = rotate(ball, rot)
         ball = translate(ball, pos)
+
+        if corner_walls:
+            ball = union([shape, ball])
 
         # return precut, shape, cutout, ball
         return precut, shape, cutout, sensor, ball
@@ -2467,7 +2491,8 @@ def make_dactyl():
         if debug_exports:
             export_file(shape=walls_shape, fname=path.join(r".", "things", r"debug_walls_shape"))
         s2 = union([walls_shape])
-        s2 = union([s2, *screw_insert_outers(side=side)])
+        if not corner_walls:
+            s2 = union([s2, *screw_insert_outers(side=side)])
 
         if trrs_hole:
             s2 = difference(s2, [trrs_mount_point()])
@@ -2501,7 +2526,8 @@ def make_dactyl():
             if controller_mount_type in ['None']:
                 0  # do nothing, only here to expressly state inaction.
 
-        s2 = difference(s2, [union(screw_insert_holes(side=side))])
+        if not corner_walls:
+            s2 = difference(s2, [union(screw_insert_holes(side=side))])
 
         if side == "right" and logo_file not in ["", None]:
             s2 = union([s2, get_logo()])
@@ -2535,41 +2561,47 @@ def make_dactyl():
             if trackball_is_in_wall(side):
                 tbprecut, tb, tbcutout, sensor, ball = generate_trackball_in_wall()
 
-                if use_btus(cluster()):
-                    shape = difference(shape, [tbcutout])
-                    shape = union([shape, tb])
-                else:
-                    shape = difference(shape, [tbprecut])
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
-                    shape = union([shape, tb])
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_2"))
-                    shape = difference(shape, [tbcutout])
-                    # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_3a"))
-                    # export_file(shape=add([shape, sensor]), fname=path.join(save_path, config_name + r"_test_3b"))
-                    shape = union([shape, sensor])
+                if not corner_walls:
+                    if use_btus(cluster()):
+                        shape = difference(shape, [tbcutout])
+                        shape = union([shape, tb])
+                    else:
+                        shape = difference(shape, [tbprecut])
+                        # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_1"))
+                        shape = union([shape, tb])
+                        # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_2"))
+                        shape = difference(shape, [tbcutout])
+                        # export_file(shape=shape, fname=path.join(save_path, config_name + r"_test_3a"))
+                        # export_file(shape=add([shape, sensor]), fname=path.join(save_path, config_name + r"_test_3b"))
+                        shape = union([shape, sensor])
+                # else:
+                #     ball = union([tb, ball])
 
-                if show_caps:
+                if show_caps or corner_walls:
                     shape = add([shape, ball])
 
             elif cluster(side).is_tb:
                 tbprecut, tb, tbcutout, sensor, ball = generate_trackball_in_cluster(cluster(side))
 
-                shape = difference(shape, [tbprecut])
-                if cluster(side).has_btus():
-                    shape = difference(shape, [tbcutout])
-                    shape = union([shape, tb])
-                elif joystick:
-                    shape = difference(shape, [tbcutout])
-                    shape = union([shape, tb])
-                elif ceramic:
-                    shape = difference(shape, [tbcutout])
-                    shape = union([shape, tb])
-                else:
-                    shape = union([shape, tb])
-                    shape = difference(shape, [tbcutout])
-                    shape = union([shape, sensor])
+                if not corner_walls:
+                    shape = difference(shape, [tbprecut])
+                    if cluster(side).has_btus():
+                        shape = difference(shape, [tbcutout])
+                        shape = union([shape, tb])
+                    elif joystick:
+                        shape = difference(shape, [tbcutout])
+                        shape = union([shape, tb])
+                    elif ceramic:
+                        shape = difference(shape, [tbcutout])
+                        shape = union([shape, tb])
+                    else:
+                        shape = union([shape, tb])
+                        shape = difference(shape, [tbcutout])
+                        shape = union([shape, sensor])
+                # else:
+                #     ball = union([tb, ball])
 
-                if show_caps:
+                if show_caps or corner_walls:
                     shape = add([shape, ball])
 
         block = translate(box(400, 400, 40), (0, 0, -20))
