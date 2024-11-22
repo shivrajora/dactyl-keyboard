@@ -1,5 +1,5 @@
 {
-  "ENGINE": "solid",
+  "ENGINE": "cadquery",
   "branch": "",
   "save_dir": ".",
   "overrides": "",
@@ -61,11 +61,11 @@
   "encoder_in_wall": false,
   "encoder_side": "both",
   "encoder_keys": null,
-  "encoder_right": "none",
-  "encoder_left": "none",
+  "encoder_right": "ec11",
+  "encoder_left": "ec11",
   "encoder_wall_row": 2,
   "right_encoder_wall_offset": [
-      -88, 0, 38
+      -88, -2, 38
     ],
     "right_encoder_wall_rotation": [
       0, -5, 0

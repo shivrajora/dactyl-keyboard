@@ -45,7 +45,7 @@ fi
 
 inform "Creating conda environment: $envName..."
 
-conda create --name=$envName python=3.8 -y
+conda create --name=$envName python=3.12 -y
 
 conda activate $envName
 
