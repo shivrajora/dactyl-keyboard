@@ -1775,7 +1775,10 @@ def make_dactyl():
         return has_btus or (cluster is not None and cluster.has_btus())
 
     def trackball_cutout(segments=100, side="right"):
-        shape = cylinder(trackball_hole_diameter / 2, trackball_hole_height)
+        if not ceramic:
+            shape = cylinder(trackball_hole_diameter / 2, trackball_hole_height)
+        else:
+            shape = translate(cylinder((trackball_hole_diameter / 2) + 5, trackball_hole_height), (0, 0, (trackball_hole_height / 2)))
         return shape
 
 
@@ -1820,7 +1823,7 @@ def make_dactyl():
             shape = rotate(shape, (0, 0, 35))
             shape = translate(shape, (0, 0, 1.2))
 
-        if not btus:
+        if not btus and not ceramic:
             cutter = union([cutter, import_file(senscut_file)])
 
         # return shape, cutter
@@ -2592,6 +2595,7 @@ def make_dactyl():
                         shape = difference(shape, [tbcutout])
                         shape = union([shape, tb])
                     elif ceramic:
+                        shape = difference(shape, [tbprecut])
                         shape = difference(shape, [tbcutout])
                         shape = union([shape, tb])
                     else:
